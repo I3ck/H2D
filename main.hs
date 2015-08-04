@@ -100,5 +100,4 @@ similar v1 v2 delta = res <= delta
         res = distance v1 v2
 
 move :: Path2D -> Vec2D -> Path2D
-move []  _  = []
-move (x:xs) a = [add a x] ++ move xs a
+move path delta  = map (add delta) path
