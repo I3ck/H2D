@@ -35,12 +35,20 @@ main = do
     let b5 = similar p8 p8 0.0
     print b5
 
+    let path1 = [p1, p2, p3, p4, p5, p6, p7, p8]
+    print path1
+
+    let path2 = move path1 p1
+    print path2
+
 
 
 data Vec2D = Vec2D {
     x :: Double,
     y :: Double
 } deriving (Show, Read)
+
+type Path2D = [Vec2D]
 
 add :: Vec2D -> Vec2D -> Vec2D
 add (Vec2D a b) (Vec2D x y) = Vec2D (a+x) (b+y)
@@ -90,3 +98,7 @@ similar :: Vec2D -> Vec2D -> Double -> Bool
 similar v1 v2 delta = res <= delta
     where
         res = distance v1 v2
+
+move :: Path2D -> Vec2D -> Path2D
+move []  _  = []
+move (x:xs) a = [add a x] ++ move xs a
