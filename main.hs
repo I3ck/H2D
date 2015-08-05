@@ -1,3 +1,7 @@
+-- Todo move all types to seperate files
+-- Todo add tests for everything
+-- Todo path is missing many methods
+
 main = do
     putStrLn "hello"
     let p1 = Vec2D {x = 1.0, y=3.0}
@@ -38,7 +42,7 @@ main = do
     let path1 = [p1, p2, p3, p4, p5, p6, p7, p8]
     print path1
 
-    let path2 = move path1 p1
+    let path2 = pathMove path1 p1
     print path2
 
 
@@ -99,5 +103,30 @@ similar v1 v2 delta = res <= delta
     where
         res = distance v1 v2
 
-move :: Path2D -> Vec2D -> Path2D
-move path delta  = map (add delta) path
+
+
+
+
+pathMove :: Path2D -> Vec2D -> Path2D
+pathMove path delta  = map (add delta) path
+
+pathMirrorV :: Path2D -> Double -> Path2D
+pathMirrorV path a = map (flip mirrorV a) path
+
+pathMirrorH :: Path2D -> Double -> Path2D
+pathMirrorH path a = map (flip mirrorH a) path
+
+pathMirrorP :: Path2D -> Vec2D -> Path2D
+pathMirrorP path a = map (flip mirrorP a) path
+
+pathRotate :: Path2D -> Double -> Vec2D -> Path2D
+pathRotate path center rad = map(flip rotate center rad) path --Todo might be broken (rotating center around each point)
+
+pathLength :: Path2D -> Double
+pathLength [] = 0
+pathLength [x] = 0
+pathLength (x:y:xs) = distance x y + pathLength xs
+
+pathSize :: Path2D -> Double
+pathSize [] = 0
+pathSize (x:xs) = 1 + pathSize xs
