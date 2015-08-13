@@ -1,5 +1,8 @@
 -- Todo add tests for everything
 -- Todo path is missing many methods
+-- Todo path made of line segments
+-- Todo sweep intersections
+-- Todo define path as line segments or
 
 --------------------------------------------------------------------------------
 
@@ -50,3 +53,6 @@ main = do
 
     let path2 = pathMove path1 p1
     print path2
+
+    let path3 = pathRotate path2 45 p1
+    print path3
