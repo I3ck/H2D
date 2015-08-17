@@ -8,6 +8,7 @@
 
 import Vec2D
 import Path2D
+import Line2D
 
 --------------------------------------------------------------------------------
 
@@ -56,3 +57,6 @@ main = do
 
     let path3 = pathRotate path2 45 p1
     print path3
+
+    let l1 = Line2D { p1 = p1, p2 = p2 }
+    print l1
