@@ -61,7 +61,7 @@ center (Vec2D x y) (Vec2D a b) = Vec2D newX newY
     where
         newX = x + (a - x) / 2.0
         newY = y + (b - y) / 2.0
-        
+
 --------------------------------------------------------------------------------
 
 equal :: Vec2D -> Vec2D -> Bool
@@ -73,3 +73,12 @@ similar :: Vec2D -> Vec2D -> Double -> Bool
 similar v1 v2 delta = res <= delta
     where
         res = distance v1 v2
+
+--------------------------------------------------------------------------------
+
+parse :: String -> Vec2D
+parse line = Vec2D{ x = d1, y = d2 }
+    where
+        d1 = head dbls
+        d2 = head dbls
+        dbls = map read  (words line)

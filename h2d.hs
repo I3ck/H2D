@@ -3,6 +3,7 @@
 -- Todo path made of line segments
 -- Todo sweep intersections
 -- Todo define path as line segments or
+-- pre or postfix typenames to functions
 
 --------------------------------------------------------------------------------
 
@@ -70,21 +71,13 @@ main = do
     let list = []
     handle <- openFile "points.xyz" ReadMode
     contents <- hGetContents handle
-    let vecs = parseVecs contents
+    let vecs = pathParse contents
     print vecs
     hClose handle
 
-parseVec :: String -> Vec2D
-parseVec line = Vec2D{ x = d1, y = d2 }
-    where
-        d1 = head dbls
-        d2 = head dbls
-        dbls = map read  (words line)
 
-parseVecs :: String -> [Vec2D]
-parseVecs content = map parseVec lins
-    where
-        lins = lines content
+
+
 
 
 f :: [String] -> [Double]
