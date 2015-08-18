@@ -6,6 +6,12 @@
 
 --------------------------------------------------------------------------------
 
+import System.IO
+import Control.Monad
+
+
+--------------------------------------------------------------------------------
+
 import Vec2D
 import Path2D
 import Line2D
@@ -60,3 +66,15 @@ main = do
 
     let l1 = Line2D { p1 = p1, p2 = p2 }
     print l1
+
+    let list = []
+    handle <- openFile "points.xyz" ReadMode
+    contents <- hGetContents handle
+    let singlewords = words contents
+        list = f singlewords
+    print list
+    hClose handle
+
+
+f :: [String] -> [Int]
+f = map read
