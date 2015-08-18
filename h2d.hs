@@ -3,7 +3,7 @@
 -- Todo path made of line segments
 -- Todo sweep intersections
 -- Todo define path as line segments or
--- pre or postfix typenames to functions
+-- Todo use classes like Moveable which define a move method, then derive from them
 
 --------------------------------------------------------------------------------
 
