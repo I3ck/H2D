@@ -18,8 +18,3 @@ pathSize [] = 0
 pathSize (x:xs) = 1 + pathSize xs
 
 --------------------------------------------------------------------------------
-
-pathParse :: String -> Path2D
-pathParse content = map parse lins
-    where
-        lins = lines content

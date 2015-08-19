@@ -20,6 +20,7 @@ import Line2D
 import Mirrorable
 import Moveable
 import Rotateable
+import Parseable
 
 --------------------------------------------------------------------------------
 
@@ -75,7 +76,7 @@ main = do
     let list = []
     handle <- openFile "points.xyz" ReadMode
     contents <- hGetContents handle
-    let vecs = pathParse contents
+    let vecs = parse contents :: Path2D
     print vecs
     hClose handle
 

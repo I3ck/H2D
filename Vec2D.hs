@@ -51,10 +51,3 @@ similar v1 v2 delta = res <= delta
         res = distance v1 v2
 
 --------------------------------------------------------------------------------
-
-parse :: String -> Vec2D
-parse line = Vec2D{ x = d1, y = d2 }
-    where
-        d1 = head dbls
-        d2 = head dbls
-        dbls = map read  (words line)
