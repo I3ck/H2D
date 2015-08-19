@@ -23,7 +23,7 @@ main = do
     putStrLn "hello"
     let p1 = Vec2D {x = 1.0, y=3.0}
     let p2 = Vec2D {x = 2.0, y=7.0}
-    let p3 = p1 `add` p2
+    let p3 = move p1 p2
     print p3
     let p4 = mirrorV p3 0.0
     print p4

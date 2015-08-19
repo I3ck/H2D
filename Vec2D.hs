@@ -5,11 +5,12 @@ data Vec2D = Vec2D {
     y :: Double
 } deriving (Show, Read)
 
---------------------------------------------------------------------------------
+class Moveable a where
+    move :: a -> Vec2D -> a
 
-add :: Vec2D -> Vec2D -> Vec2D
-add (Vec2D a b) (Vec2D x y) = Vec2D (a+x) (b+y)
-
+instance Moveable Vec2D where
+    move (Vec2D a b) (Vec2D x y) = Vec2D (a+x) (b+y)
+    
 --------------------------------------------------------------------------------
 
 mirrorV :: Vec2D -> Double -> Vec2D
