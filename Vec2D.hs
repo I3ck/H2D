@@ -5,32 +5,6 @@ data Vec2D = Vec2D {
     y :: Double
 } deriving (Show, Read)
 
---Todo leave data in files, move classes to own files and all instances to the corresponding class file
-class Moveable a where
-    move :: a -> Vec2D -> a
-
-class Mirrorable a where
-    mirrorV :: a -> Double -> a
-    mirrorH :: a -> Double -> a
-    mirrorP :: a -> Vec2D -> a
-
-class Rotateable a where
-    rotate :: a -> Double -> Vec2D -> a
-
-instance Moveable Vec2D where
-    move (Vec2D a b) (Vec2D x y) = Vec2D (a+x) (b+y)
-
-instance Mirrorable Vec2D where
-    mirrorV (Vec2D x y) a           = Vec2D (2 * a - x) y
-    mirrorH (Vec2D x y) a           = Vec2D x (2 * a - y)
-    mirrorP (Vec2D x y) (Vec2D a b) = Vec2D (2 * a - x) (2 * b - y)
-
-instance Rotateable Vec2D where
-    rotate (Vec2D x y) rad (Vec2D centerX centerY) = Vec2D newX newY
-        where
-            newX = centerX + cos rad * (x - centerX) - sin rad * (y - centerY)
-            newY = centerY + sin rad * (x - centerY) + cos rad * (y - centerY)
-
 --------------------------------------------------------------------------------
 
 absolute :: Vec2D -> Double

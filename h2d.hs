@@ -17,6 +17,10 @@ import Vec2D
 import Path2D
 import Line2D
 
+import Mirrorable
+import Moveable
+import Rotateable
+
 --------------------------------------------------------------------------------
 
 main = do
@@ -62,7 +66,7 @@ main = do
     let path2 = move path1 p1
     print path2
 
-    let path3 = pathRotate path2 45 p1
+    let path3 = rotate path2 45 p1
     print path3
 
     let l1 = Line2D { p1 = p1, p2 = p2 }
