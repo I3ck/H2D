@@ -1,13 +1,12 @@
+{-# LANGUAGE FlexibleInstances #-}
+
 module Path2D where
 
 import Vec2D
 
 type Path2D = [Vec2D]
-
---------------------------------------------------------------------------------
-
-pathMove :: Path2D -> Vec2D -> Path2D
-pathMove path delta  = map (add delta) path
+instance Moveable Path2D where
+    move path delta  = map (move delta) path
 
 --------------------------------------------------------------------------------
 

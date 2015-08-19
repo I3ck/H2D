@@ -59,7 +59,7 @@ main = do
     let path1 = [p1, p2, p3, p4, p5, p6, p7, p8]
     print path1
 
-    let path2 = pathMove path1 p1
+    let path2 = move path1 p1
     print path2
 
     let path3 = pathRotate path2 45 p1
