@@ -40,3 +40,15 @@ createArc    nPoints diameter radStart  radEnd    (Vec2D centerX centerY) = map 
                 x = centerX + diameter/2.0 * cos(radians);
                 y = centerY + diameter/2.0 * sin(radians);
                 radians = radStart + fromIntegral i * abs (radEnd - radStart) / (fromIntegral nPoints - 1.0)
+
+--------------------------------------------------------------------------------
+
+createEllipse :: Int -> Double -> Double -> Double -> Vec2D -> Path2D
+createEllipse    nPoints a        b         rad       (Vec2D centerX centerY) = map ell [0..(nPoints-1)]
+    where
+        ell :: Int -> Vec2D
+        ell i = (Vec2D x y)
+            where
+                x = centerX + a * cos current * cos rad - b * sin current * sin rad
+                y = centerY + a * cos current * sin rad + b * sin current * cos rad
+                current = fromIntegral i * 2.0 * pi / (fromIntegral nPoints - 1.0)
