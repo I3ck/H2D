@@ -78,10 +78,12 @@ main = do
     let list = []
     contents <- readFile "gear.tmp"
     let gear = parse contents :: Path2D
-    let rotatedGear = rotate gear 45 p1
+    let movedGear = move gear p1
+    let rotatedGear = rotate gear (pi/2.0) p1
 
-    print gear
     writeFile "rotatedGear.tmp" $ write rotatedGear
+    writeFile "movedGear.tmp" $ write movedGear
+    writeFile "copiedGear.tmp" $ write gear
 
 
 

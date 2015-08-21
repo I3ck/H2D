@@ -21,7 +21,7 @@ instance Parseable Vec2D where
     parse line = Vec2D{ x = d1, y = d2 }
         where
             d1 = head dbls
-            d2 = head dbls
+            d2 = head $ tail dbls
             dbls = map read  (words line)
 
     write (Vec2D x y) = show x ++ " " ++ show y
