@@ -18,3 +18,13 @@ pathSize [] = 0
 pathSize (x:xs) = 1 + pathSize xs
 
 --------------------------------------------------------------------------------
+
+createInvolutCircle :: Int -> Double -> Double -> Double -> Vec2D -> Path2D
+createInvolutCircle    nPoints diameter radStart radEnd    (Vec2D centerX centerY) = map involut [0..(nPoints-1)]
+    where
+        involut :: Int -> Vec2D
+        involut i = (Vec2D x y)
+            where
+                x = centerX + diameter/2.0 * (cos current + current * sin current)
+                y = centerY + diameter/2.0 * (sin current - current * cos current)
+                current = fromIntegral i * abs (radEnd - radStart) / (fromIntegral nPoints - 1.0)

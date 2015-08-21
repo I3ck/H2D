@@ -5,6 +5,7 @@
 -- Todo define path as line segments or
 -- Todo use classes like Moveable which define a move method, then derive from them
 -- Todo instanciate show and read instead of parse and write
+-- Todo fromIntegral realToFrac
 
 --------------------------------------------------------------------------------
 
@@ -80,10 +81,13 @@ main = do
     let gear = parse contents :: Path2D
     let movedGear = move gear p1
     let rotatedGear = rotate gear (pi/2.0) p1
+    let invol = createInvolutCircle 1000 50 0.0 pi p1
+
 
     writeFile "rotatedGear.tmp" $ write rotatedGear
     writeFile "movedGear.tmp" $ write movedGear
     writeFile "copiedGear.tmp" $ write gear
+    writeFile "invol.tmp" $ write invol
 
 
 
