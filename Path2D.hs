@@ -52,3 +52,13 @@ createEllipse    nPoints a        b         rad       (Vec2D centerX centerY) = 
                 x = centerX + a * cos current * cos rad - b * sin current * sin rad
                 y = centerY + a * cos current * sin rad + b * sin current * cos rad
                 current = fromIntegral i * 2.0 * pi / (fromIntegral nPoints - 1.0)
+
+--------------------------------------------------------------------------------
+
+createRectangle :: Double -> Double -> Vec2D -> Path2D
+createRectangle    width     height    (Vec2D centerX centerY) = [p1, p2, p3, p4]
+    where
+        p1 = Vec2D (centerX - width/2.0) (centerY - height/2.0)
+        p2 = Vec2D (centerX + width/2.0) (centerY - height/2.0)
+        p3 = Vec2D (centerX + width/2.0) (centerY + height/2.0)
+        p4 = Vec2D (centerX - width/2.0) (centerY + height/2.0)

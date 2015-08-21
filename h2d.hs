@@ -6,6 +6,7 @@
 -- Todo use classes like Moveable which define a move method, then derive from them
 -- Todo instanciate show and read instead of parse and write
 -- Todo fromIntegral realToFrac
+-- Todo drop angle as parameter from ellipse?
 
 --------------------------------------------------------------------------------
 
@@ -84,6 +85,7 @@ main = do
     let invol = createInvolutCircle 1000 50 0.0 pi p1
     let arc = createArc 1000 50 0.0 (1.5*pi) p1
     let ellipse = createEllipse 1000 30 40 pi p1
+    let rect = createRectangle 30 50 p1
 
 
     writeFile "rotatedGear.tmp" $ write rotatedGear
@@ -92,6 +94,7 @@ main = do
     writeFile "invol.tmp" $ write invol
     writeFile "arc.tmp" $ write arc
     writeFile "ellipse.tmp" $ write ellipse
+    writeFile "rectangle.tmp" $ write rect
 
 
 
