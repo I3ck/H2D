@@ -7,6 +7,12 @@
 -- Todo instanciate show and read instead of parse and write
 -- Todo fromIntegral realToFrac
 -- Todo drop angle as parameter from ellipse?
+-- Todo add interpolations
+-- Todo add all path algorithms
+-- Todo add sweep intersection algorithms
+-- Todo make this a proper package useable by others
+-- Todo add a license
+-- Todo release on github?
 
 --------------------------------------------------------------------------------
 
