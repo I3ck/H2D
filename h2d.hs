@@ -76,14 +76,12 @@ main = do
     print l1
 
     let list = []
-    handle <- openFile "gear.tmp" ReadMode
-    contents <- hGetContents handle
+    contents <- readFile "gear.tmp"
     let gear = parse contents :: Path2D
     let rotatedGear = rotate gear 45 p1
 
     print gear
     writeFile "rotatedGear.tmp" $ write rotatedGear
-    hClose handle
 
 
 
