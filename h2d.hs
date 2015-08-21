@@ -82,12 +82,14 @@ main = do
     let movedGear = move gear p1
     let rotatedGear = rotate gear (pi/2.0) p1
     let invol = createInvolutCircle 1000 50 0.0 pi p1
+    let arc = createArc 1000 50 0.0 (1.5*pi) p1
 
 
     writeFile "rotatedGear.tmp" $ write rotatedGear
     writeFile "movedGear.tmp" $ write movedGear
     writeFile "copiedGear.tmp" $ write gear
     writeFile "invol.tmp" $ write invol
+    writeFile "arc.tmp" $ write arc
 
 
 

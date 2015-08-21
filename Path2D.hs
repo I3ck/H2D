@@ -28,3 +28,15 @@ createInvolutCircle    nPoints diameter radStart radEnd    (Vec2D centerX center
                 x = centerX + diameter/2.0 * (cos current + current * sin current)
                 y = centerY + diameter/2.0 * (sin current - current * cos current)
                 current = fromIntegral i * abs (radEnd - radStart) / (fromIntegral nPoints - 1.0)
+
+--------------------------------------------------------------------------------
+
+createArc :: Int -> Double -> Double -> Double -> Vec2D -> Path2D
+createArc    nPoints diameter radStart  radEnd    (Vec2D centerX centerY) = map arc [0..(nPoints-1)]
+    where
+        arc :: Int -> Vec2D
+        arc i = (Vec2D x y)
+            where
+                x = centerX + diameter/2.0 * cos(radians);
+                y = centerY + diameter/2.0 * sin(radians);
+                radians = radStart + fromIntegral i * abs (radEnd - radStart) / (fromIntegral nPoints - 1.0)
