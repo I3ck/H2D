@@ -4,9 +4,11 @@
 -- Todo sweep intersections
 -- Todo define path as line segments or
 -- Todo use classes like Moveable which define a move method, then derive from them
+-- Todo instanciate show and read instead of parse and write
 
 --------------------------------------------------------------------------------
 
+import System.Environment
 import System.IO
 import Control.Monad
 
@@ -74,10 +76,13 @@ main = do
     print l1
 
     let list = []
-    handle <- openFile "points.xyz" ReadMode
+    handle <- openFile "gear.tmp" ReadMode
     contents <- hGetContents handle
-    let vecs = parse contents :: Path2D
-    print vecs
+    let gear = parse contents :: Path2D
+    let rotatedGear = rotate gear 45 p1
+
+    print gear
+    writeFile "rotatedGear.tmp" $ write rotatedGear
     hClose handle
 
 
