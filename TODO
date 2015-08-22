@@ -22,6 +22,21 @@ add all path algorithms
 
 add sweep intersection algorithms
 
+missing:
+    min/max x/y
+    bounding box
+    make unique
+    average distance
+    has point
+    remove above/below/rightof/leftof
+    remove closer/further to
+    center
+    closest/furthest to path/point
+    similar/equal
+    intersections intersects
+    sortX sortY (sort already done)
+    http://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm
+
 make this a proper package useable by others
 
 add a license
