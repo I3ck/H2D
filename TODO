@@ -1,0 +1,29 @@
+add tests for everything
+
+path is missing many methods
+
+path made of line segments
+
+sweep intersections
+
+define path as line segments or
+
+use classes like Moveable which define a move method, then derive from them
+
+instanciate show and read instead of parse and write
+
+fromIntegral realToFrac
+
+drop angle as parameter from ellipse?
+
+add interpolations
+
+add all path algorithms
+
+add sweep intersection algorithms
+
+make this a proper package useable by others
+
+add a license
+
+release on github?

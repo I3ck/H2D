@@ -1,25 +1,6 @@
--- Todo add tests for everything
--- Todo path is missing many methods
--- Todo path made of line segments
--- Todo sweep intersections
--- Todo define path as line segments or
--- Todo use classes like Moveable which define a move method, then derive from them
--- Todo instanciate show and read instead of parse and write
--- Todo fromIntegral realToFrac
--- Todo drop angle as parameter from ellipse?
--- Todo add interpolations
--- Todo add all path algorithms
--- Todo add sweep intersection algorithms
--- Todo make this a proper package useable by others
--- Todo add a license
--- Todo release on github?
-
---------------------------------------------------------------------------------
-
 import System.Environment
 import System.IO
 import Control.Monad
-
 
 --------------------------------------------------------------------------------
 
