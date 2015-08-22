@@ -1,8 +1,9 @@
 {-# LANGUAGE FlexibleInstances #-}
 
-module Path2D where
+module H2d.Path2D where
 
-import Vec2D
+import H2d.Vec2D
+
 import Data.List
 
 type Path2D = [Vec2D]

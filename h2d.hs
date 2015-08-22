@@ -1,17 +1,19 @@
+module H2d where
+
 import System.Environment
 import System.IO
 import Control.Monad
 
 --------------------------------------------------------------------------------
 
-import Vec2D
-import Path2D
-import Line2D
+import H2d.Vec2D
+import H2d.Path2D
+import H2d.Line2D
 
-import Mirrorable
-import Moveable
-import Rotateable
-import Parseable
+import H2d.Mirrorable
+import H2d.Moveable
+import H2d.Rotateable
+import H2d.Parseable
 
 --------------------------------------------------------------------------------
 

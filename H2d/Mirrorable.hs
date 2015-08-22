@@ -1,8 +1,8 @@
 {-# LANGUAGE FlexibleInstances #-}
-module Mirrorable where
+module H2d.Mirrorable where
 
-import Vec2D
-import Path2D
+import H2d.Vec2D
+import H2d.Path2D
 
 class Mirrorable a where
     mirrorV :: a -> Double -> a

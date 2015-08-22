@@ -1,4 +1,4 @@
-module Vec2D where
+module H2d.Vec2D where
 
 data Vec2D = Vec2D {
     x :: Double,

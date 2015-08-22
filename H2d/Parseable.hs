@@ -1,8 +1,8 @@
 {-# LANGUAGE FlexibleInstances #-}
-module Parseable where
+module H2d.Parseable where
 
-import Vec2D
-import Path2D
+import H2d.Vec2D
+import H2d.Path2D
 
 --TODO read can be used?
 class Parseable a where

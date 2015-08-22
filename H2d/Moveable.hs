@@ -1,8 +1,8 @@
 {-# LANGUAGE FlexibleInstances #-}
-module Moveable where
+module H2d.Moveable where
 
-import Vec2D
-import Path2D
+import H2d.Vec2D
+import H2d.Path2D
 
 class Moveable a where
     move :: a -> Vec2D -> a

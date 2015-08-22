@@ -1,8 +1,9 @@
 {-# LANGUAGE FlexibleInstances #-}
-module Rotateable where
 
-import Vec2D
-import Path2D
+module H2d.Rotateable where
+
+import H2d.Vec2D
+import H2d.Path2D
 
 class Rotateable a where
     rotate :: a -> Double -> Vec2D -> a

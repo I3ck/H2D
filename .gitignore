@@ -3,6 +3,8 @@
 *.o
 *.hi
 *.tmp
+!H2d/
+!H2d/*.hs
 
 !TODO
 !README
