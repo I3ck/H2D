@@ -10,6 +10,29 @@ type Path2D = [Vec2D]
 
 --------------------------------------------------------------------------------
 
+boundingBox :: Path2D -> Path2D
+boundingBox path = [vecMin, vecMax]
+    where
+        vecMin = Vec2D (minX path) (minY path)
+        vecMax = Vec2D (maxX path) (maxY path)
+
+minX :: Path2D -> Double
+minX [(Vec2D x y)] = x
+minX ((Vec2D x y):xs) = min x $ minX xs
+
+minY :: Path2D -> Double
+minY [(Vec2D x y)] = y
+minY ((Vec2D x y):xs) = min y $ minY xs
+
+maxX :: Path2D -> Double
+maxX [(Vec2D x y)] = x
+maxX ((Vec2D x y):xs) = max x $ maxX xs
+
+maxY :: Path2D -> Double
+maxY [(Vec2D x y)] = y
+maxY ((Vec2D x y):xs) = max y $ maxY xs
+--------------------------------------------------------------------------------
+
 pathLength :: Path2D -> Double
 pathLength [] = 0
 pathLength [x] = 0

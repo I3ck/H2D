@@ -20,6 +20,10 @@ add interpolations
 
 add all path algorithms
 
+test for all the algorithms
+
+many functions dont check for empty lists or lists with 1 element
+
 add sweep intersection algorithms
 
 missing:
