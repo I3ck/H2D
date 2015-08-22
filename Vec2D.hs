@@ -5,6 +5,31 @@ data Vec2D = Vec2D {
     y :: Double
 } deriving (Show, Read)
 
+instance Eq Vec2D where
+    (==) (Vec2D x1 y1) (Vec2D x2 y2) = x1 == x2 && y1 == y2
+    (/=) (Vec2D x1 y1) (Vec2D x2 y2) = x1 /= x2 || y1 /= y2
+
+instance Ord Vec2D where
+    (<) (Vec2D x1 y1) (Vec2D x2 y2) = x1 < x2 || (x1 == x2 && y1 < y2)
+    (<=) vec1 vec2 = vec1 < vec2 || vec1 == vec2
+    (>) (Vec2D x1 y1) (Vec2D x2 y2) = x1 > x2 || (x1 == x2 && y1 > y2)
+    (>=) vec1 vec2 = vec1 > vec2 || vec1 == vec2
+
+--------------------------------------------------------------------------------
+
+cross :: Vec2D -> Vec2D -> Double
+cross (Vec2D x1 y1) (Vec2D x2 y2) = x1 * y2 - x2 * y1
+
+--------------------------------------------------------------------------------
+
+sub :: Vec2D -> Vec2D -> Vec2D
+sub (Vec2D x1 y1) (Vec2D x2 y2) = Vec2D (x1 - x2) (y1 - y2)
+
+--------------------------------------------------------------------------------
+
+clockwise :: Vec2D -> Vec2D -> Vec2D -> Bool
+clockwise o a b = (a `sub` o) `cross` (b `sub` o) <= 0
+
 --------------------------------------------------------------------------------
 
 absolute :: Vec2D -> Double

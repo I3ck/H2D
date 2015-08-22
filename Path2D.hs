@@ -3,6 +3,7 @@
 module Path2D where
 
 import Vec2D
+import Data.List
 
 type Path2D = [Vec2D]
 
@@ -62,3 +63,27 @@ createRectangle    width     height    (Vec2D centerX centerY) = [p1, p2, p3, p4
         p2 = Vec2D (centerX + width/2.0) (centerY - height/2.0)
         p3 = Vec2D (centerX + width/2.0) (centerY + height/2.0)
         p4 = Vec2D (centerX - width/2.0) (centerY + height/2.0)
+
+--------------------------------------------------------------------------------
+
+-- monotone chain algorithm
+-- https://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain#Haskell
+convexHull :: Path2D -> Path2D
+convexHull [] = []
+convexHull [p] = [p]
+convexHull points = lower ++ upper
+  where
+    sorted = sort points
+    lower = monotoneChain sorted
+    upper = monotoneChain (reverse sorted)
+
+    monotoneChain :: Path2D -> Path2D
+    monotoneChain = build []
+      where
+        build :: Path2D -> Path2D -> Path2D
+        build acc@(v1:v2:vs) (x:xs) =
+          if clockwise v2 v1 x
+            then build (v2:vs) (x:xs)
+            else build (x:acc) xs
+        build acc (x:xs) = build (x:acc) xs
+        build acc [] = reverse $ tail acc

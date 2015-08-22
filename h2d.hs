@@ -103,6 +103,19 @@ main = do
     writeFile "rectangle.tmp" $ write rect
 
 
+    -- testing addition
+    let pCenter1 = Vec2D {x = 0.0, y = 0.0}
+    let pCenter2 = Vec2D {x = 0.0, y = 200.0}
+    let doubleRot = tmp (rotate gear (0.02) pCenter2) 100 0.0002 pCenter1 pCenter2
+
+    writeFile "doubleRot.tmp" $ write doubleRot
+    writeFile "doubleRotConvex.tmp" $ write $ convexHull doubleRot
+
+tmp :: Path2D -> Int -> Double -> Vec2D -> Vec2D -> Path2D
+tmp    path      times  deltarad  center1  center2 = concat $ map rot [0..(times-1)]
+    where
+        rot :: Int -> Path2D
+        rot i = rotate (rotate path (fromIntegral i * (-deltarad)) center1) (fromIntegral i * deltarad) (rotate center2 (fromIntegral i * (-deltarad)) center1)
 
 
 
