@@ -64,6 +64,36 @@ averageDistance path = (pathLength path) / (pathSize path - 1)
 
 --------------------------------------------------------------------------------
 
+removeAbove :: Path2D -> Vec2D -> Path2D
+removeAbove [] _ = []
+removeAbove path (Vec2D xother yother) = filter belowOrEqual path
+    where
+        belowOrEqual :: Vec2D -> Bool
+        belowOrEqual    (Vec2D xthis ythis) = ythis <= yother
+
+removeBelow :: Path2D -> Vec2D -> Path2D
+removeBelow [] _ = []
+removeBelow path (Vec2D xother yother) = filter aboveOrEqual path
+    where
+        aboveOrEqual :: Vec2D -> Bool
+        aboveOrEqual    (Vec2D xthis ythis) = ythis >= yother
+
+removeLeftOf :: Path2D -> Vec2D -> Path2D
+removeLeftOf [] _ = []
+removeLeftOf path (Vec2D xother yother) = filter rightOfOrEqual path
+    where
+        rightOfOrEqual :: Vec2D -> Bool
+        rightOfOrEqual    (Vec2D xthis ythis) = xthis >= xother
+
+removeRightOf :: Path2D -> Vec2D -> Path2D
+removeRightOf [] _ = []
+removeRightOf path (Vec2D xother yother) = filter leftOfOrEqual path
+    where
+        leftOfOrEqual :: Vec2D -> Bool
+        leftOfOrEqual    (Vec2D xthis ythis) = xthis <= xother
+
+--------------------------------------------------------------------------------
+
 createInvolutCircle :: Int -> Double -> Double -> Double -> Vec2D -> Path2D
 createInvolutCircle    nPoints diameter radStart radEnd    (Vec2D centerX centerY) = map involut [0..(nPoints-1)]
     where
