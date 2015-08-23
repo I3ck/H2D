@@ -13,14 +13,21 @@ You should have received a copy of the GNU Lesser General Public License
 along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
-module H2d.Line2D where
+{-# LANGUAGE FlexibleInstances #-}
 
-import H2d.Vec2D
+module H2D.Rotateable where
 
-data Line2D = Line2D {
-    p1 :: Vec2D,
-    p2 :: Vec2D
-} deriving (Show, Read)
+import H2D.Vec2D
+import H2D.Path2D
 
+class Rotateable a where
+    rotate :: a -> Double -> Vec2D -> a
 
--- TODO intersection code https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
+instance Rotateable Path2D where
+    rotate path rad center = map(\x -> rotate x rad center) path
+
+instance Rotateable Vec2D where
+    rotate (Vec2D x y) rad (Vec2D centerX centerY) = Vec2D newX newY
+        where
+            newX = centerX + cos rad * (x - centerX) - sin rad * (y - centerY)
+            newY = centerY + sin rad * (x - centerX) + cos rad * (y - centerY)

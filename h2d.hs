@@ -21,14 +21,14 @@ import Control.Monad
 
 --------------------------------------------------------------------------------
 
-import H2d.Vec2D
-import H2d.Path2D
-import H2d.Line2D
+import H2D.Vec2D
+import H2D.Path2D
+import H2D.Line2D
 
-import H2d.Mirrorable
-import H2d.Moveable
-import H2d.Rotateable
-import H2d.Parseable
+import H2D.Mirrorable
+import H2D.Moveable
+import H2D.Rotateable
+import H2D.Parseable
 
 --------------------------------------------------------------------------------
 

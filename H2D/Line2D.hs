@@ -13,30 +13,14 @@ You should have received a copy of the GNU Lesser General Public License
 along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
-{-# LANGUAGE FlexibleInstances #-}
-module H2d.Parseable where
+module H2D.Line2D where
 
-import H2d.Vec2D
-import H2d.Path2D
+import H2D.Vec2D
 
---TODO read can be used?
-class Parseable a where
-    parse :: String -> a
-    write :: a -> String
+data Line2D = Line2D {
+    p1 :: Vec2D,
+    p2 :: Vec2D
+} deriving (Show, Read)
 
-instance Parseable Path2D where
-    parse content = map parse lins
-        where
-            lins = lines content
 
-    write []     = ""
-    write (x:xs) = write x ++ "\n" ++ write xs
-
-instance Parseable Vec2D where
-    parse line = Vec2D{ x = d1, y = d2 }
-        where
-            d1 = head dbls
-            d2 = head $ tail dbls -- TODO more efficent way?
-            dbls = map read  (words line)
-
-    write (Vec2D x y) = show x ++ " " ++ show y
+-- TODO intersection code https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection

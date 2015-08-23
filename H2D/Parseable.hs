@@ -14,20 +14,29 @@ along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
 {-# LANGUAGE FlexibleInstances #-}
+module H2D.Parseable where
 
-module H2d.Rotateable where
+import H2D.Vec2D
+import H2D.Path2D
 
-import H2d.Vec2D
-import H2d.Path2D
+--TODO read can be used?
+class Parseable a where
+    parse :: String -> a
+    write :: a -> String
 
-class Rotateable a where
-    rotate :: a -> Double -> Vec2D -> a
-
-instance Rotateable Path2D where
-    rotate path rad center = map(\x -> rotate x rad center) path
-
-instance Rotateable Vec2D where
-    rotate (Vec2D x y) rad (Vec2D centerX centerY) = Vec2D newX newY
+instance Parseable Path2D where
+    parse content = map parse lins
         where
-            newX = centerX + cos rad * (x - centerX) - sin rad * (y - centerY)
-            newY = centerY + sin rad * (x - centerX) + cos rad * (y - centerY)
+            lins = lines content
+
+    write []     = ""
+    write (x:xs) = write x ++ "\n" ++ write xs
+
+instance Parseable Vec2D where
+    parse line = Vec2D{ x = d1, y = d2 }
+        where
+            d1 = head dbls
+            d2 = head $ tail dbls -- TODO more efficent way?
+            dbls = map read  (words line)
+
+    write (Vec2D x y) = show x ++ " " ++ show y

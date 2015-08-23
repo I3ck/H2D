@@ -14,10 +14,10 @@ along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
 {-# LANGUAGE FlexibleInstances #-}
-module H2d.Mirrorable where
+module H2D.Mirrorable where
 
-import H2d.Vec2D
-import H2d.Path2D
+import H2D.Vec2D
+import H2D.Path2D
 
 class Mirrorable a where
     mirrorV :: a -> Double -> a
