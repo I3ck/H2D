@@ -46,8 +46,28 @@ maxX ((Vec2D x y):xs) = max x $ maxX xs
 maxY :: Path2D -> Double
 maxY [(Vec2D x y)] = y
 maxY ((Vec2D x y):xs) = max y $ maxY xs
+
 --------------------------------------------------------------------------------
 
+sortByX :: Path2D -> Path2D
+sortByX path = sortBy compX path
+    where
+        compX :: Vec2D -> Vec2D -> Ordering
+        compX (Vec2D x1 y1) (Vec2D x2 y2)
+            | x1 > x2 = GT
+            | x1 < x2 = LT
+            | x1 == x2 = compare y1 y2
+
+sortByY :: Path2D -> Path2D
+sortByY path = sortBy compY path
+    where
+        compY :: Vec2D -> Vec2D -> Ordering
+        compY (Vec2D x1 y1) (Vec2D x2 y2)
+            | y1 > y2 = GT
+            | y1 < y2 = LT
+            | y1 == y2 = compare x1 x2
+
+--------------------------------------------------------------------------------
 pathLength :: Path2D -> Double
 pathLength [] = 0
 pathLength [x] = 0

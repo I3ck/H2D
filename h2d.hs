@@ -109,6 +109,8 @@ main = do
     writeFile "doubleRot.tmp" $ write doubleRot
     writeFile "doubleRotConvbex.tmp" $ write $ convexHull doubleRot
     writeFile "doubleRotBounding.tmp" $ write $ boundingBox doubleRot
+    writeFile "doubleRotSortedY.tmp" $ write $ sortByY doubleRot
+    writeFile "doubleRotSortedX.tmp" $ write $ sortByX doubleRot
 
 tmp :: Path2D -> Int -> Double -> Vec2D -> Vec2D -> Path2D
 tmp    path      times  deltarad  center1  center2 = concat $ map rot [0..(times-1)]

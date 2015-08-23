@@ -15,7 +15,6 @@ missing:
     closest/furthest to path/point
     similar/equal
     intersections intersects intersection code https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection or sweep intersections
-    sortX sortY (sort already done)
     http://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm
     interpolations
 
