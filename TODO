@@ -10,7 +10,6 @@ many functions dont check for empty lists or lists with 1 element
 
 missing:
     make unique
-    average distance
     has point
     remove above/below/rightof/leftof
     remove closer/further to

@@ -25,7 +25,7 @@ type Path2D = [Vec2D]
 
 --------------------------------------------------------------------------------
 
-boundingBox :: Path2D -> Path2D
+boundingBox :: Path2D -> Path2D --TODO rather make this return four points?
 boundingBox path = [vecMin, vecMax]
     where
         vecMin = Vec2D (minX path) (minY path)
@@ -56,6 +56,11 @@ pathLength (x:y:xs) = distance x y + pathLength xs
 pathSize :: Path2D -> Double
 pathSize [] = 0
 pathSize (x:xs) = 1 + pathSize xs
+
+averageDistance :: Path2D -> Double
+averageDistance [] = 0
+averageDistance [x] = 0
+averageDistance path = (pathLength path) / (pathSize path - 1)
 
 --------------------------------------------------------------------------------
 
