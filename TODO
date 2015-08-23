@@ -10,7 +10,6 @@ many functions dont check for empty lists or lists with 1 element
 
 missing:
     make unique
-    has point
     remove closer/further to
     center
     closest/furthest to path/point
