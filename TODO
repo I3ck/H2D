@@ -1,36 +1,14 @@
 add tests for everything
 
-rename to H2D instead of H2d
-
-path is missing many methods
-
-path made of line segments
-
-sweep intersections
-
-define path as line segments or
-
-use classes like Moveable which define a move method, then derive from them
-
 instanciate show and read instead of parse and write
 
 fromIntegral realToFrac
 
 drop angle as parameter from ellipse?
 
-add interpolations
-
-add all path algorithms
-
-test for all the algorithms
-
 many functions dont check for empty lists or lists with 1 element
 
-add sweep intersection algorithms
-
 missing:
-    min/max x/y
-    bounding box
     make unique
     average distance
     has point
@@ -39,12 +17,9 @@ missing:
     center
     closest/furthest to path/point
     similar/equal
-    intersections intersects
+    intersections intersects intersection code https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection or sweep intersections
     sortX sortY (sort already done)
     http://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm
+    interpolations
 
 make this a proper package useable by others
-
-add a license
-
-release on github?
