@@ -82,6 +82,20 @@ averageDistance [] = 0
 averageDistance [x] = 0
 averageDistance path = (pathLength path) / (pathSize path - 1)
 
+pathCenter :: Path2D -> Vec2D
+pathCenter [] = (Vec2D 0.0 0.0)
+pathCenter path = Vec2D ((sumX path) / vecs) ((sumY path) / vecs)
+    where
+        vecs = pathSize path
+        
+        sumX :: Path2D -> Double
+        sumX [] = 0
+        sumX ((Vec2D x y):xs) = x + sumX xs
+
+        sumY :: Path2D -> Double
+        sumY [] = 0
+        sumY ((Vec2D x y):xs) = y + sumY xs
+
 --------------------------------------------------------------------------------
 
 removeAbove :: Path2D -> Vec2D -> Path2D

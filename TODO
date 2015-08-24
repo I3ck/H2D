@@ -11,7 +11,6 @@ many functions dont check for empty lists or lists with 1 element
 missing:
     make unique
     remove closer/further to
-    center
     closest/furthest to path/point
     similar/equal
     intersections intersects intersection code https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection or sweep intersections
