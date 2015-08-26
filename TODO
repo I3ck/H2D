@@ -8,6 +8,8 @@ drop angle as parameter from ellipse?
 
 many functions dont check for empty lists or lists with 1 element
 
+add proper unit testing
+
 missing:
     make unique
     remove closer/further to
