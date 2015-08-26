@@ -14,10 +14,10 @@ along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
 {-# LANGUAGE FlexibleInstances #-}
-module H2D.Moveable where
+module Moveable where
 
-import H2D.Vec2D
-import H2D.Path2D
+import Vec2D
+import Path2D
 
 class Moveable a where
     move :: a -> Vec2D -> a

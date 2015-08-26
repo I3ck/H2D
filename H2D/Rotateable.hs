@@ -15,10 +15,10 @@ along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 
 {-# LANGUAGE FlexibleInstances #-}
 
-module H2D.Rotateable where
+module Rotateable where
 
-import H2D.Vec2D
-import H2D.Path2D
+import Vec2D
+import Path2D
 
 class Rotateable a where
     rotate :: a -> Double -> Vec2D -> a

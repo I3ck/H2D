@@ -13,9 +13,9 @@ You should have received a copy of the GNU Lesser General Public License
 along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
-module H2D.Line2D where
+module Line2D where
 
-import H2D.Vec2D
+import Vec2D
 
 data Line2D = Line2D {
     p1 :: Vec2D,

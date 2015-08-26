@@ -17,7 +17,7 @@ extra-source-files:  README.md
 cabal-version:       >=1.10
 
 library
-  exposed-modules:     H2D.Line2D, H2D.Moveable, H2D.Vec2D, H2D.Parseable, H2D.Mirrorable, H2D.Rotateable, H2D.Path2D, H2d.Line2D, H2d.Rotateable, H2d.Path2D
+  exposed-modules:     Line2D, Moveable, Vec2D, Parseable, Mirrorable, Rotateable, Path2D
   -- other-modules:
   other-extensions:    FlexibleInstances
   build-depends:       base >=4.8 && <4.9

@@ -15,9 +15,9 @@ along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 
 {-# LANGUAGE FlexibleInstances #-}
 
-module H2D.Path2D where
+module Path2D where
 
-import H2D.Vec2D
+import Vec2D
 
 import Data.List
 
