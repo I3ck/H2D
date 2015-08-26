@@ -87,7 +87,7 @@ pathCenter [] = (Vec2D 0.0 0.0)
 pathCenter path = Vec2D ((sumX path) / vecs) ((sumY path) / vecs)
     where
         vecs = pathSize path
-        
+
         sumX :: Path2D -> Double
         sumX [] = 0
         sumX ((Vec2D x y):xs) = x + sumX xs
@@ -125,6 +125,20 @@ removeRightOf path (Vec2D xother yother) = filter leftOfOrEqual path
     where
         leftOfOrEqual :: Vec2D -> Bool
         leftOfOrEqual    (Vec2D xthis ythis) = xthis <= xother
+
+removeCloserTo :: Path2D -> Vec2D -> Double -> Path2D
+removeCloserTo [] _ _ = []
+removeCloserTo path other minDistance = filter furtherApart path
+    where
+        furtherApart :: Vec2D -> Bool
+        furtherApart    this = distance this other > minDistance
+
+removeMoreDistantTo :: Path2D -> Vec2D -> Double -> Path2D
+removeMoreDistantTo [] _ _ = []
+removeMoreDistantTo path other maxDistance = filter closerTo path
+    where
+        closerTo :: Vec2D -> Bool
+        closerTo    this = distance this other < maxDistance
 
 --------------------------------------------------------------------------------
 
