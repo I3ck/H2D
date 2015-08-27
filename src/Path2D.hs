@@ -18,6 +18,7 @@ along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 module Path2D where
 
 import Vec2D
+import Line2D
 
 import Data.List
 
@@ -139,6 +140,29 @@ removeMoreDistantTo path other maxDistance = filter closerTo path
     where
         closerTo :: Vec2D -> Bool
         closerTo    this = distance this other < maxDistance
+
+--------------------------------------------------------------------------------
+-- TODO rename
+intersections :: Path2D -> Path2D -> Path2D
+intersections [] _ = []
+intersections _ [] = []
+intersections [a] _ = []
+intersections _ [a] = []
+intersections (p1:p2:ps) other = intersectionsLP (Line2D p1 p2) other ++ intersections ps other
+
+--------------------------------------------------------------------------------
+
+-- TODO rename
+intersectionsLP :: Line2D -> Path2D -> Path2D
+intersectionsLP _ [] = []
+intersectionsLP _ [a] = []
+intersectionsLP line1 (p3:p4:ps) =  intersectionsLL line1 (Line2D p3 p4) ++ intersectionsLP line1 ps
+
+--------------------------------------------------------------------------------
+
+-- TODO rename
+intersectionsLL :: Line2D -> Line2D -> Path2D
+intersectionsLL l1 l2 = [] --TODO implement algorithm
 
 --------------------------------------------------------------------------------
 
