@@ -19,3 +19,5 @@ missing:
     interpolations
 
 make this a proper package useable by others
+
+better pattern matching (see intersections e.g. for the best case)
