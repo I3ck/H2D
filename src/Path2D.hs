@@ -21,6 +21,7 @@ import Vec2D
 import Line2D
 
 import Data.List
+import Data.Ix
 
 type Path2D = [Vec2D]
 
@@ -158,7 +159,19 @@ intersectionsLP _ _ = []
 
 -- TODO rename
 intersectionsLL :: Line2D -> Line2D -> Path2D
-intersectionsLL l1 l2 = [] --TODO implement algorithm
+intersectionsLL (Line2D p1 p2) (Line2D q1 q2)
+    | pVertical && qVertical = []
+    | pHorizontal && qHorizontal = []
+    | valid = [(Vec2D intersectX intersectY)]
+    | otherwise = []
+    where
+        pVertical = x p1 == x p2
+        pHorizontal = y p1 == y p2
+        qVertical = x q1 == x q2
+        qHorizontal = y q1 == y q2
+        valid = inRange (min (x q1) (x q2), max (x q1) (x q2)) intersectX && inRange (min (x p1) (x p2), max (x p1) (x p2)) intersectX
+        intersectX = 0.0 -- TODO
+        intersectY = 0.0 -- TODO
 
 --------------------------------------------------------------------------------
 
