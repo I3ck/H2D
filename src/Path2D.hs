@@ -21,7 +21,6 @@ import Vec2D
 import Line2D
 
 import Data.List
-import Data.Ix
 
 type Path2D = [Vec2D]
 
@@ -169,9 +168,13 @@ intersectionsLL (Line2D p1 p2) (Line2D q1 q2)
         pHorizontal = y p1 == y p2
         qVertical = x q1 == x q2
         qHorizontal = y q1 == y q2
-        valid = inRange (min (x q1) (x q2), max (x q1) (x q2)) intersectX && inRange (min (x p1) (x p2), max (x p1) (x p2)) intersectX
-        intersectX = 0.0 -- TODO
-        intersectY = 0.0 -- TODO
+        valid = inBetween (min (x q1) (x q2)) (max (x q1) (x q2)) intersectX &&
+                inBetween (min (x p1) (x p2)) (max (x p1) (x p2)) intersectX
+        intersectX = (y q1 - y p1 + slope p1 p2 * x p1 - slope q1 q2 * x q1) /  (slope p1 p2 - slope q1 q2)
+        intersectY =  slope p1 p2 * (intersectX - x p1) + y p1
+
+        inBetween :: Double -> Double -> Double -> Bool -- TODO move to general util file
+        inBetween border1 border2 value = (value >= border1 && value <= border2) || (value >= border2 && value <= border1)
 
 --------------------------------------------------------------------------------
 
