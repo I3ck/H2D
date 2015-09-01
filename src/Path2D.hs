@@ -144,14 +144,14 @@ removeMoreDistantTo path other maxDistance = filter closerTo path
 --------------------------------------------------------------------------------
 -- TODO rename
 intersections :: Path2D -> Path2D -> Path2D
-intersections (p1:p2:ps) other = intersectionsLP (Line2D p1 p2) other ++ intersections ps other
+intersections (p1:p2:ps) other = intersectionsLP (Line2D p1 p2) other ++ intersections (p2:ps) other
 intersections _ _ = []
 
 --------------------------------------------------------------------------------
 
 -- TODO rename
 intersectionsLP :: Line2D -> Path2D -> Path2D
-intersectionsLP line1 (p3:p4:ps) =  intersectionsLL line1 (Line2D p3 p4) ++ intersectionsLP line1 ps
+intersectionsLP line1 (p3:p4:ps) =  intersectionsLL line1 (Line2D p3 p4) ++ intersectionsLP line1 (p4:ps)
 intersectionsLP _ _ = []
 
 --------------------------------------------------------------------------------
@@ -159,19 +159,24 @@ intersectionsLP _ _ = []
 -- TODO rename
 intersectionsLL :: Line2D -> Line2D -> Path2D
 intersectionsLL (Line2D p1 p2) (Line2D q1 q2)
-    | pVertical && qVertical = []
-    | pHorizontal && qHorizontal = []
+    | denominator == 0 = []
     | valid = [(Vec2D intersectX intersectY)]
     | otherwise = []
     where
-        pVertical = x p1 == x p2
-        pHorizontal = y p1 == y p2
-        qVertical = x q1 == x q2
-        qHorizontal = y q1 == y q2
-        valid = inBetween (min (x q1) (x q2)) (max (x q1) (x q2)) intersectX &&
-                inBetween (min (x p1) (x p2)) (max (x p1) (x p2)) intersectX
-        intersectX = (y q1 - y p1 + slope p1 p2 * x p1 - slope q1 q2 * x q1) /  (slope p1 p2 - slope q1 q2)
-        intersectY =  slope p1 p2 * (intersectX - x p1) + y p1
+        valid = (inBetween x1 x2 intersectX) && (inBetween x3 x4 intersectX)
+        intersectX = (  (x1*y2 - y1*x2)*(x3 - x4) - (x1 - x2)*(x3*y4 - y3*x4)  ) / denominator
+        intersectY = (  (x1*y2 - y1*x2)*(y3 - y4) - (y1 - y2)*(x3*y4 - y3*x4)  ) / denominator
+
+        denominator = (x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4)
+
+        x1 = x p1
+        y1 = y p1
+        x2 = x p2
+        y2 = y p2
+        x3 = x q1
+        y3 = y q1
+        x4 = x q2
+        y4 = y q2
 
         inBetween :: Double -> Double -> Double -> Bool -- TODO move to general util file
         inBetween border1 border2 value = (value >= border1 && value <= border2) || (value >= border2 && value <= border1)
