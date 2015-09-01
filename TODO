@@ -16,5 +16,3 @@ missing:
     sweep intersections
     http://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm
     interpolations
-
-better pattern matching (see intersections e.g. for the best case)
