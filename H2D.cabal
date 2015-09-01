@@ -2,7 +2,7 @@
 -- see http://haskell.org/cabal/users-guide/
 
 name:                H2D
-version:             0.0.2
+version:             0.0.3
 synopsis:            A Haskell library for paths in 2D space
 -- description:
 homepage:            https://github.com/I3ck/H2D

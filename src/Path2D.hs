@@ -26,11 +26,13 @@ type Path2D = [Vec2D]
 
 --------------------------------------------------------------------------------
 
-boundingBox :: Path2D -> Path2D --TODO rather make this return four points?
-boundingBox path = [vecMin, vecMax]
+boundingBox :: Path2D -> Path2D
+boundingBox path = [vecMinMin, vecMinMax, vecMaxMin, vecMaxMax]
     where
-        vecMin = Vec2D (minX path) (minY path)
-        vecMax = Vec2D (maxX path) (maxY path)
+        vecMinMin = Vec2D (minX path) (minY path)
+        vecMinMax = Vec2D (minX path) (maxY path)
+        vecMaxMin = Vec2D (maxX path) (minY path)
+        vecMaxMax = Vec2D (maxX path) (maxY path)
 
 minX :: Path2D -> Double
 minX [(Vec2D x y)] = x
@@ -69,6 +71,7 @@ sortByY path = sortBy compY path
             | y1 == y2 = compare x1 x2
 
 --------------------------------------------------------------------------------
+
 pathLength :: Path2D -> Double
 pathLength [] = 0
 pathLength [x] = 0
@@ -142,21 +145,19 @@ removeMoreDistantTo path other maxDistance = filter closerTo path
         closerTo    this = distance this other < maxDistance
 
 --------------------------------------------------------------------------------
--- TODO rename
-intersections :: Path2D -> Path2D -> Path2D
-intersections (p1:p2:ps) other = intersectionsLP (Line2D p1 p2) other ++ intersections (p2:ps) other
-intersections _ _ = []
+
+intersectionsPP :: Path2D -> Path2D -> Path2D
+intersectionsPP (p1:p2:ps) other = intersectionsLP (Line2D p1 p2) other ++ intersectionsPP (p2:ps) other
+intersectionsPP _ _ = []
 
 --------------------------------------------------------------------------------
 
--- TODO rename
 intersectionsLP :: Line2D -> Path2D -> Path2D
 intersectionsLP line1 (p3:p4:ps) =  intersectionsLL line1 (Line2D p3 p4) ++ intersectionsLP line1 (p4:ps)
 intersectionsLP _ _ = []
 
 --------------------------------------------------------------------------------
 
--- TODO rename
 intersectionsLL :: Line2D -> Line2D -> Path2D
 intersectionsLL (Line2D p1 p2) (Line2D q1 q2)
     | denominator == 0 = []
