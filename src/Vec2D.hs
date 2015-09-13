@@ -30,6 +30,14 @@ instance Ord Vec2D where
     (>) (Vec2D x1 y1) (Vec2D x2 y2) = x1 > x2 || (x1 == x2 && y1 > y2)
     (>=) vec1 vec2 = vec1 > vec2 || vec1 == vec2
 
+instance Num Vec2D where
+   (Vec2D a b) + (Vec2D c d) = Vec2D (a+c) (b+d)
+   (Vec2D a b) * (Vec2D c d) = Vec2D (a*c) (b*d)
+   (Vec2D a b) - (Vec2D c d) = Vec2D (a-c) (b-d)
+   abs    (Vec2D a b) = Vec2D (abs a) (abs b)
+   signum (Vec2D a b) = Vec2D (signum a) (signum b)
+   fromInteger i = Vec2D (fromInteger i) (fromInteger i)
+
 --------------------------------------------------------------------------------
 
 cross :: Vec2D -> Vec2D -> Double

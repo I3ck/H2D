@@ -242,6 +242,20 @@ createRectangle _ _ _ = []
 
 --------------------------------------------------------------------------------
 
+interpolationBezier :: Path2D -> Int -> Path2D
+interpolationBezier    path      nPoints = map bez [1..(nPoints-1)]
+    where
+        bez :: Int -> Vec2D
+        bez i = bezier path (fromIntegral i * 1.0 / fromIntegral nPoints)
+
+--------------------------------------------------------------------------------
+
+bezier :: Path2D -> Double -> Vec2D
+bezier    [x]       _       = x
+bezier    path      t       = ( Vec2D{x = 1.0 - t, y = 1.0 - t} * (bezier (init path) t)  ) + Vec2D{x = t, y = t} * (bezier (tail path) t)
+
+--------------------------------------------------------------------------------
+
 -- monotone chain algorithm
 -- https://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain#Haskell
 convexHull :: Path2D -> Path2D

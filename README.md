@@ -1,6 +1,6 @@
 #H2D
 A Haskell library for paths defined by points within the 2d space
-##Version 0.0.4
+##Version 0.0.5
 
 ##data types
 
@@ -28,7 +28,8 @@ removeLeftOf
 removeCloserThan
 removeFurtherThan
 boundingBox
-intersections
+intersections  
+interpolations
 ...and many more
 ```
 
