@@ -2,7 +2,7 @@
 -- see http://haskell.org/cabal/users-guide/
 
 name:                H2D
-version:             0.0.5
+version:             0.0.6
 synopsis:            A Haskell library for paths in 2D space
 -- description:
 homepage:            https://github.com/I3ck/H2D
@@ -17,6 +17,7 @@ extra-source-files:  README.md
 cabal-version:       >=1.10
 
 library
+  ghc-options:         -O2
   exposed-modules:     Line2D, Moveable, Vec2D, Parseable, Mirrorable, Rotateable, Path2D
   -- other-modules:
   other-extensions:    FlexibleInstances

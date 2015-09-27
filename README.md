@@ -1,6 +1,6 @@
 #H2D
 A Haskell library for paths defined by points within the 2d space
-##Version 0.0.5
+##Version 0.0.6
 
 ##data types
 
