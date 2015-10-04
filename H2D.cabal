@@ -17,7 +17,7 @@ extra-source-files:  README.md
 cabal-version:       >=1.10
 
 library
-  ghc-options:         -O2 -threaded -with-rtsopts=-N4
+  ghc-options:         -O2 -threaded
   exposed-modules:     Line2D, Moveable, Vec2D, Parseable, Mirrorable, Rotateable, Path2D
   -- other-modules:
   other-extensions:    FlexibleInstances
