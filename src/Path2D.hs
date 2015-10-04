@@ -17,6 +17,8 @@ along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 
 module Path2D where
 
+import Control.Parallel.Strategies (runEval, rpar)
+
 import Vec2D
 import Line2D
 
@@ -154,7 +156,7 @@ removeMoreDistantTo _ _ _ = []
 --------------------------------------------------------------------------------
 
 intersectionsPP :: Path2D -> Path2D -> Path2D
-intersectionsPP    (p1:p2:ps) other = intersectionsLP (Line2D p1 p2) other ++ intersectionsPP (p2:ps) other
+intersectionsPP    (p1:p2:ps) other = runEval ( rpar (intersectionsLP (Line2D p1 p2) other)) ++ runEval (rpar (intersectionsPP (p2:ps) other) )
 intersectionsPP _ _ = []
 
 --------------------------------------------------------------------------------
