@@ -247,8 +247,8 @@ createRectangle _ _ _ = []
 createLine :: Vec2D -> Vec2D -> Int -> Path2D
 createLine    (Vec2D x1 y1) (Vec2D x2 y2) nPoints = map lin [0..(nPoints-1)]
     where
-        deltaX = abs $ (x1 - x2) / (fromIntegral nPoints - 1.0)
-        deltaY = abs $ (y1 - y2) / (fromIntegral nPoints - 1.0)
+        deltaX = (x2 - x1) / (fromIntegral nPoints - 1.0)
+        deltaY = (y2 - y1) / (fromIntegral nPoints - 1.0)
         lin :: Int -> Vec2D
         lin i = (Vec2D x y)
             where
