@@ -244,6 +244,19 @@ createRectangle _ _ _ = []
 
 --------------------------------------------------------------------------------
 
+createLine :: Vec2D -> Vec2D -> Int -> Path2D
+createLine    (Vec2D x1 y1) (Vec2D x2 y2) nPoints = map lin [0..(nPoints-1)]
+    where
+        deltaX = abs $ (x1 - x2) / (fromIntegral nPoints - 1.0)
+        deltaY = abs $ (y1 - y2) / (fromIntegral nPoints - 1.0)
+        lin :: Int -> Vec2D
+        lin i = (Vec2D x y)
+            where
+                x = x1 + (fromIntegral i * deltaX)
+                y = y1 + (fromIntegral i * deltaY)
+
+--------------------------------------------------------------------------------
+
 interpolationBezier :: Path2D -> Int -> Path2D
 interpolationBezier    path      nPoints = map bez [1..(nPoints-1)]
     where
