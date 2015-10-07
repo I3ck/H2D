@@ -23,6 +23,7 @@ import Vec2D
 import Line2D
 
 import Data.List
+import Data.Ord (comparing)
 
 type Path2D = [Vec2D]
 
@@ -84,7 +85,7 @@ sortByY _ = []
 --------------------------------------------------------------------------------
 
 pathLength :: Path2D -> Double
-pathLength    (x:y:xs) = distance x y + pathLength xs
+pathLength    (x:y:xs) = distance x y + pathLength xs --TODO possible bug, since it should recurse on (y:xs)
 pathLength    _ = 0
 
 pathSize :: Path2D -> Double
@@ -152,6 +153,12 @@ removeMoreDistantTo    path      other    maxDistance = filter closerTo path
         closerTo :: Vec2D -> Bool
         closerTo    this = distance this other < maxDistance
 removeMoreDistantTo _ _ _ = []
+
+--------------------------------------------------------------------------------
+
+insertAt :: Int -> Vec2D -> Path2D -> Path2D
+insertAt    pos    vec      path = before ++ (vec:after)
+                  where (before,after) = splitAt pos path
 
 --------------------------------------------------------------------------------
 
@@ -291,3 +298,42 @@ convexHull    points = lower ++ upper
         build acc (x:xs) = build (x:acc) xs
         build acc [] = reverse $ tail acc
 convexHull _ = []
+
+
+concaveHull :: Path2D -> Double -> Path2D
+concaveHull    points    maxDist = buildHull inital
+    where
+        inital = convexHull points
+        buildHull :: Path2D -> Path2D
+        buildHull hull
+            | longestLength < maxDist = hull
+            | otherwise = buildHull $ insertAt idStartLongest pointWithSmallestAngle hull -- TODO might be ID + 1
+                where
+                    pointWithSmallestAngle = pWithSmallestAngleBetween hull pStart pEnd
+                    longestLength = distance pStart pEnd
+                    pEnd = hull !! idEndLongest
+                    pStart = hull !! idStartLongest
+                    idStartLongest = startIdOfLongestEdge hull
+                    idEndLongest | idStartLongest >= length hull = 0
+                                 | otherwise = idStartLongest + 1
+
+        pWithSmallestAngleBetween :: Path2D -> Vec2D -> Vec2D -> Vec2D
+        pWithSmallestAngleBetween [] pStart _ = pStart
+        pWithSmallestAngleBetween    path      pStart   pEnd = path !! index
+            where
+                index = fst $ minimumBy (comparing snd) (zip [0..] angles)
+                angles = map calcAngleSum path
+
+                calcAngleSum :: Vec2D -> Double
+                calcAngleSum p = abs ( (radTo pStart p) - angleDirect) + abs ( (radTo p pEnd) - angleDirect)
+                    where angleDirect = radTo pStart pEnd
+
+        startIdOfLongestEdge :: Path2D -> Int
+        startIdOfLongestEdge    []   = 0
+        startIdOfLongestEdge    [x]  = 0
+        startIdOfLongestEdge    path = fst $ maximumBy (comparing snd) (zip [0..] ( (distance (last path) (head path)) : (distances path) ))
+
+        distances :: Path2D -> [Double]
+        distances    []    =  []
+        distances    [x]   =  []
+        distances (x:y:xs) = ((distance x y) : (distances (y:xs)))
