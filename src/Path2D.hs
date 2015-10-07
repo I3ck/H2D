@@ -301,13 +301,14 @@ convexHull _ = []
 
 
 concaveHull :: Path2D -> Double -> Path2D
-concaveHull    points    minLongestDist = buildHull inital
+concaveHull    points    minDist = buildHull 0 inital
     where
         inital = convexHull points
-        buildHull :: Path2D -> Path2D
-        buildHull hull
-            | longestLength < minLongestDist = hull
-            | otherwise = buildHull $ insertAfter idStartLongest pointWithSmallestAngle hull -- TODO might be ID + 1
+        buildHull :: Int -> Path2D -> Path2D --TODO int for debugging
+        buildHull iteration hull
+            | iteration > 1000 = hull --TODO for debugging
+            | longestLength < minDist = hull
+            | otherwise = buildHull (iteration + 1) $ insertAfter idStartLongest pointWithSmallestAngle hull -- TODO might be ID + 1
                 where
                     pointWithSmallestAngle = pWithSmallestAngleBetween hull pStart pEnd
                     longestLength = distance pStart pEnd
@@ -324,11 +325,15 @@ concaveHull    points    minLongestDist = buildHull inital
                 angles = map calcAngleSum path
 
                 calcAngleSum :: Vec2D -> Double
-                calcAngleSum p = maximum [ abs( (radTo pStart p) - (radTo pStart pEnd) ), abs ( (radTo pEnd p) - (radTo pEnd pStart))]
+                calcAngleSum p
+                    | pStart == pEnd = 100 * pi
+                    | p == pStart = 100 * pi
+                    | p == pEnd = 100 * pi
+                    | otherwise = abs ( (radTo pStart p) - (radTo pStart pEnd)) + abs ( (radTo pEnd p) - (radTo pEnd pStart))
 
         startIdOfLongestEdge :: Path2D -> Int
         startIdOfLongestEdge    []   = 0
-        --startIdOfLongestEdge    [x]  = 0
+        startIdOfLongestEdge    [x]  = 0
         startIdOfLongestEdge    path = fst $ maximumBy (comparing snd) (zip [0..] ( (distances path) ++ [distance (last path) (head path)] ))
 
         distances :: Path2D -> [Double]
