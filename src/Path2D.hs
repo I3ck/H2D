@@ -156,9 +156,9 @@ removeMoreDistantTo _ _ _ = []
 
 --------------------------------------------------------------------------------
 
-insertAt :: Int -> Vec2D -> Path2D -> Path2D
-insertAt    pos    vec      path = before ++ (vec:after)
-                  where (before,after) = splitAt pos path
+insertAfter :: Int -> Vec2D -> Path2D -> Path2D
+insertAfter    pos    vec      path = before ++ (vec:after)
+                  where (before,after) = splitAt (pos+1) path
 
 --------------------------------------------------------------------------------
 
@@ -301,37 +301,35 @@ convexHull _ = []
 
 
 concaveHull :: Path2D -> Double -> Path2D
-concaveHull    points    maxDist = buildHull inital
+concaveHull    points    minLongestDist = buildHull inital
     where
         inital = convexHull points
         buildHull :: Path2D -> Path2D
         buildHull hull
-            | longestLength < maxDist = hull
-            | otherwise = buildHull $ insertAt idStartLongest pointWithSmallestAngle hull -- TODO might be ID + 1
+            | longestLength < minLongestDist = hull
+            | otherwise = buildHull $ insertAfter idStartLongest pointWithSmallestAngle hull -- TODO might be ID + 1
                 where
                     pointWithSmallestAngle = pWithSmallestAngleBetween hull pStart pEnd
                     longestLength = distance pStart pEnd
                     pEnd = hull !! idEndLongest
                     pStart = hull !! idStartLongest
                     idStartLongest = startIdOfLongestEdge hull
-                    idEndLongest | idStartLongest >= length hull = 0
-                                 | otherwise = idStartLongest + 1
+                    idEndLongest | idStartLongest < (length hull - 1) = idStartLongest + 1
+                                 | otherwise = 0
 
         pWithSmallestAngleBetween :: Path2D -> Vec2D -> Vec2D -> Vec2D
-        pWithSmallestAngleBetween [] pStart _ = pStart
         pWithSmallestAngleBetween    path      pStart   pEnd = path !! index
             where
                 index = fst $ minimumBy (comparing snd) (zip [0..] angles)
                 angles = map calcAngleSum path
 
                 calcAngleSum :: Vec2D -> Double
-                calcAngleSum p = abs ( (radTo pStart p) - angleDirect) + abs ( (radTo p pEnd) - angleDirect)
-                    where angleDirect = radTo pStart pEnd
+                calcAngleSum p = maximum [ abs( (radTo pStart p) - (radTo pStart pEnd) ), abs ( (radTo pEnd p) - (radTo pEnd pStart))]
 
         startIdOfLongestEdge :: Path2D -> Int
         startIdOfLongestEdge    []   = 0
-        startIdOfLongestEdge    [x]  = 0
-        startIdOfLongestEdge    path = fst $ maximumBy (comparing snd) (zip [0..] ( (distance (last path) (head path)) : (distances path) ))
+        --startIdOfLongestEdge    [x]  = 0
+        startIdOfLongestEdge    path = fst $ maximumBy (comparing snd) (zip [0..] ( (distances path) ++ [distance (last path) (head path)] ))
 
         distances :: Path2D -> [Double]
         distances    []    =  []
