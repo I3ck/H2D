@@ -306,9 +306,9 @@ concaveHull    points    minDist = buildHull 0 inital
         inital = convexHull points
         buildHull :: Int -> Path2D -> Path2D --TODO int for debugging
         buildHull iteration hull
-            | iteration >= 1 = hull --TODO for debugging
+            | iteration >= 5 = hull --TODO for debugging
             | longestLength < minDist = hull
-            | otherwise = buildHull (iteration + 1) $ insertAfter (idStartLongest) pointWithSmallestAngle hull -- TODO might be ID + 1
+            | otherwise = buildHull (iteration + 1) $ insertAfter idStartLongest pointWithSmallestAngle hull -- TODO might be ID + 1
                 where
                     pointWithSmallestAngle = pWithSmallestAngleBetween points hull pStart pEnd
                     longestLength = distance pStart pEnd
@@ -330,7 +330,7 @@ concaveHull    points    minDist = buildHull 0 inital
                     | pStart == pEnd = 100 * pi
                     | p == pStart = 100 * pi
                     | p == pEnd = 100 * pi
-                    | otherwise = abs ( (radTo pStart p) - (radTo pStart pEnd)) + abs ( (radTo pEnd p) - (radTo pEnd pStart))
+                    | otherwise = max( abs ( (radTo pStart p) - (radTo pStart pEnd)))  (abs ( (radTo pEnd p) - (radTo pEnd pStart)))
 
         startIdOfLongestEdge :: Path2D -> Int
         startIdOfLongestEdge    []   = 0
