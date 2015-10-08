@@ -299,14 +299,13 @@ convexHull    points = lower ++ upper
         build acc [] = reverse $ tail acc
 convexHull _ = []
 
--- TODO must NOT consider points already on the hull
-concaveHull :: Path2D -> Double -> Path2D
-concaveHull    points    minDist = buildHull 0 inital
+concaveHull :: Path2D -> Double -> Int -> Path2D
+concaveHull    points    minDist   maxIter = buildHull 0 inital --TODO maxIter / iter might be shifted by 1
     where
         inital = convexHull points
-        buildHull :: Int -> Path2D -> Path2D --TODO int for debugging
+        buildHull :: Int -> Path2D -> Path2D
         buildHull iteration hull
-            | iteration >= 200 = hull --TODO for debugging
+            | iteration >= maxIter = hull
             | longestLength < minDist = hull
             | otherwise = buildHull (iteration + 1) $ insertAfter idStartLongest pointWithSmallestAngle hull -- TODO might be ID + 1
                 where
