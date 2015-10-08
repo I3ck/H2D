@@ -310,7 +310,7 @@ concaveHull    points    minDist = buildHull 0 inital
             | longestLength < minDist = hull
             | otherwise = buildHull (iteration + 1) $ insertAfter idStartLongest pointWithSmallestAngle hull -- TODO might be ID + 1
                 where
-                    pointWithSmallestAngle = pWithSmallestAngleBetween points hull pStart pEnd
+                    pointWithSmallestAngle = pCreatingFlatestTriangle points hull pStart pEnd
                     longestLength = distance pStart pEnd
                     pEnd = hull !! idEndLongest
                     pStart = hull !! idStartLongest
@@ -318,28 +318,18 @@ concaveHull    points    minDist = buildHull 0 inital
                     idEndLongest | idStartLongest < (length hull - 1) = idStartLongest + 1
                                  | otherwise = 0
 
-        pWithSmallestAngleBetween :: Path2D -> Path2D -> Vec2D -> Vec2D -> Vec2D
-        pWithSmallestAngleBetween    path      hull      pStart   pEnd = path !! index
+        pCreatingFlatestTriangle :: Path2D -> Path2D -> Vec2D -> Vec2D -> Vec2D
+        pCreatingFlatestTriangle    path      hull      pStart   pEnd = path !! index
             where
-                index = fst $ minimumBy (comparing snd) (zip [0..] angles)
-                angles = map calcAngleSum path
+                index = fst $ maximumBy (comparing snd) (zip [0..] flats)
+                flats = map flatnessOfNewTriangle path
 
-                calcAngleSum :: Vec2D -> Double
-                calcAngleSum p
-                    | p `elem` hull = 100 * pi
-                    | pStart == pEnd = 100 * pi
-                    -- | p == pStart = 100 * pi -- covered by elem test
-                    -- | p == pEnd = 100 * pi -- covered by elem test
-                    | otherwise = (  (distance pStart p) + (distance p pEnd  )  ) / (distance pStart pEnd)
-                   {- | otherwise = max (abs angle1) (abs angle2)
-                        where
-                            angle1 = atan2 (cross start2End start2New) (dot start2End start2New)
-                            angle2 = atan2 (cross end2Start end2New) (dot end2Start end2New )
-                            start2End = Vec2D { x = (x pEnd) - (x pStart), y = (y pEnd) - (y pStart) }
-                            end2Start = Vec2D { x = - (x start2End),       y = - (y start2End)}
-                            start2New = Vec2D { x = (x p) - (x pStart),    y = (y pStart) - (y p)}
-                            end2New =   Vec2D { x = (x pEnd) - (x p),      y = (y pEnd) - (y p)} -- TODO write new method to do vec of p2p
--}
+                flatnessOfNewTriangle :: Vec2D -> Double
+                flatnessOfNewTriangle p
+                    | p `elem` hull = 0
+                    | pStart == pEnd = 0
+                    | otherwise =  (distance pStart pEnd) / (  (distance pStart p) + (distance p pEnd  )  )
+
 
         startIdOfLongestEdge :: Path2D -> Int
         startIdOfLongestEdge    []   = 0
