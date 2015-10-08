@@ -317,7 +317,7 @@ concaveHull    points    minDist   maxIter = buildHull 0 inital --TODO maxIter /
                     idEndLongest | idStartLongest < (length hull - 1) = idStartLongest + 1
                                  | otherwise = 0
 
-        pCreatingFlatestTriangle :: Path2D -> Path2D -> Vec2D -> Vec2D -> Vec2D
+        pCreatingFlatestTriangle :: Path2D -> Path2D -> Vec2D -> Vec2D -> Vec2D -- TODO converting too slowly (maybe angle approach is required after all)
         pCreatingFlatestTriangle    path      hull      pStart   pEnd = path !! index
             where
                 index = fst $ maximumBy (comparing snd) (zip [0..] flats)
