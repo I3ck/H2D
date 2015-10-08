@@ -306,7 +306,7 @@ concaveHull    points    minDist = buildHull 0 inital
         inital = convexHull points
         buildHull :: Int -> Path2D -> Path2D --TODO int for debugging
         buildHull iteration hull
-            | iteration >= 5 = hull --TODO for debugging
+            | iteration >= 200 = hull --TODO for debugging
             | longestLength < minDist = hull
             | otherwise = buildHull (iteration + 1) $ insertAfter idStartLongest pointWithSmallestAngle hull -- TODO might be ID + 1
                 where
@@ -330,7 +330,8 @@ concaveHull    points    minDist = buildHull 0 inital
                     | pStart == pEnd = 100 * pi
                     -- | p == pStart = 100 * pi -- covered by elem test
                     -- | p == pEnd = 100 * pi -- covered by elem test
-                    | otherwise = max (abs angle1) (abs angle2)
+                    | otherwise = (  (distance pStart p) + (distance p pEnd  )  ) / (distance pStart pEnd)
+                   {- | otherwise = max (abs angle1) (abs angle2)
                         where
                             angle1 = atan2 (cross start2End start2New) (dot start2End start2New)
                             angle2 = atan2 (cross end2Start end2New) (dot end2Start end2New )
@@ -338,7 +339,7 @@ concaveHull    points    minDist = buildHull 0 inital
                             end2Start = Vec2D { x = - (x start2End),       y = - (y start2End)}
                             start2New = Vec2D { x = (x p) - (x pStart),    y = (y pStart) - (y p)}
                             end2New =   Vec2D { x = (x pEnd) - (x p),      y = (y pEnd) - (y p)} -- TODO write new method to do vec of p2p
-
+-}
 
         startIdOfLongestEdge :: Path2D -> Int
         startIdOfLongestEdge    []   = 0
