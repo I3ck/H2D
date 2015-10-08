@@ -299,18 +299,18 @@ convexHull    points = lower ++ upper
         build acc [] = reverse $ tail acc
 convexHull _ = []
 
-
+-- TODO must NOT consider points already on the hull
 concaveHull :: Path2D -> Double -> Path2D
 concaveHull    points    minDist = buildHull 0 inital
     where
         inital = convexHull points
         buildHull :: Int -> Path2D -> Path2D --TODO int for debugging
         buildHull iteration hull
-            | iteration > 1000 = hull --TODO for debugging
+            | iteration >= 1 = hull --TODO for debugging
             | longestLength < minDist = hull
-            | otherwise = buildHull (iteration + 1) $ insertAfter idStartLongest pointWithSmallestAngle hull -- TODO might be ID + 1
+            | otherwise = buildHull (iteration + 1) $ insertAfter (idStartLongest) pointWithSmallestAngle hull -- TODO might be ID + 1
                 where
-                    pointWithSmallestAngle = pWithSmallestAngleBetween hull pStart pEnd
+                    pointWithSmallestAngle = pWithSmallestAngleBetween points hull pStart pEnd
                     longestLength = distance pStart pEnd
                     pEnd = hull !! idEndLongest
                     pStart = hull !! idStartLongest
@@ -318,14 +318,15 @@ concaveHull    points    minDist = buildHull 0 inital
                     idEndLongest | idStartLongest < (length hull - 1) = idStartLongest + 1
                                  | otherwise = 0
 
-        pWithSmallestAngleBetween :: Path2D -> Vec2D -> Vec2D -> Vec2D
-        pWithSmallestAngleBetween    path      pStart   pEnd = path !! index
+        pWithSmallestAngleBetween :: Path2D -> Path2D -> Vec2D -> Vec2D -> Vec2D
+        pWithSmallestAngleBetween    path      hull      pStart   pEnd = path !! index
             where
                 index = fst $ minimumBy (comparing snd) (zip [0..] angles)
                 angles = map calcAngleSum path
 
                 calcAngleSum :: Vec2D -> Double
                 calcAngleSum p
+                    | p `elem` hull = 100 * pi
                     | pStart == pEnd = 100 * pi
                     | p == pStart = 100 * pi
                     | p == pEnd = 100 * pi
