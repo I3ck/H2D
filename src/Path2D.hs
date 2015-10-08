@@ -328,9 +328,17 @@ concaveHull    points    minDist = buildHull 0 inital
                 calcAngleSum p
                     | p `elem` hull = 100 * pi
                     | pStart == pEnd = 100 * pi
-                    | p == pStart = 100 * pi
-                    | p == pEnd = 100 * pi
-                    | otherwise = max( abs ( (radTo pStart p) - (radTo pStart pEnd)))  (abs ( (radTo pEnd p) - (radTo pEnd pStart)))
+                    -- | p == pStart = 100 * pi -- covered by elem test
+                    -- | p == pEnd = 100 * pi -- covered by elem test
+                    | otherwise = max (abs angle1) (abs angle2)
+                        where
+                            angle1 = atan2 (cross start2End start2New) (dot start2End start2New)
+                            angle2 = atan2 (cross end2Start end2New) (dot end2Start end2New )
+                            start2End = Vec2D { x = (x pEnd) - (x pStart), y = (y pEnd) - (y pStart) }
+                            end2Start = Vec2D { x = - (x start2End),       y = - (y start2End)}
+                            start2New = Vec2D { x = (x p) - (x pStart),    y = (y pStart) - (y p)}
+                            end2New =   Vec2D { x = (x pEnd) - (x p),      y = (y pEnd) - (y p)} -- TODO write new method to do vec of p2p
+
 
         startIdOfLongestEdge :: Path2D -> Int
         startIdOfLongestEdge    []   = 0

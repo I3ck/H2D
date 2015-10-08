@@ -40,6 +40,9 @@ instance Num Vec2D where
 
 --------------------------------------------------------------------------------
 
+dot :: Vec2D -> Vec2D -> Double
+dot    (Vec2D x1 y1) (Vec2D x2 y2) = x1 * x2 + y1 * y2
+
 cross :: Vec2D -> Vec2D -> Double
 cross    (Vec2D x1 y1) (Vec2D x2 y2) = x1 * y2 - x2 * y1
 
