@@ -39,7 +39,13 @@ instance Num Vec2D where
    fromInteger i = Vec2D (fromInteger i) (fromInteger i)
 
 dir :: Vec2D -> Vec2D -> Vec2D
-dir (Vec2D x1 y1) (Vec2D x2 y2) = Vec2D (x2 - x1) (y2 - y1)
+dir (Vec2D x1 y1) (Vec2D x2 y2) = norm $ Vec2D (x2 - x1) (y2 - y1)
+
+--------------------------------------------------------------------------------
+
+norm :: Vec2D -> Vec2D
+norm (Vec2D x y) = Vec2D (x / l) (y / l)
+    where l = absolute $ Vec2D  x y
 
 --------------------------------------------------------------------------------
 
