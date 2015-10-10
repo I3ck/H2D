@@ -300,11 +300,12 @@ convexHull    points = lower ++ upper
 convexHull _ = []
 
 concaveHullKNearest :: Path2D -> Int -> Int -> Path2D
-concaveHullKNearest    points    kNearest dbgMaxIter = buildHull startPoint [startPoint] 0
+concaveHullKNearest    points    kNearest dbgMaxIter = buildHull startPoint [] 0
     where
-        startPoint = head $ sortByY points
+        startPoint = head $ sortByX points
 
         buildHull :: Vec2D -> Path2D -> Int -> Path2D
+        buildHull p [] iter = buildHull p [p] (iter+1) 
         buildHull    p    hull iter
             | iter >= dbgMaxIter = hull
             | (points !! next) `elem` hull = hull
@@ -322,7 +323,7 @@ concaveHullKNearest    points    kNearest dbgMaxIter = buildHull startPoint [sta
 
                     distanceToP :: Vec2D -> Double
                     distanceToP   x
-                        | x == p = 10000000 -- TODO choose biggest possible number here
+                        | x `elem` hull = 10000000 -- TODO choose biggest possible number here
                         | otherwise = distance p x
 
                     chooseNext :: [Int] -> Int
@@ -333,9 +334,10 @@ concaveHullKNearest    points    kNearest dbgMaxIter = buildHull startPoint [sta
 
                     weightCandidate :: Vec2D -> Double
                     weightCandidate candidate
-                        | candidate `elem` hull = 0 --TODO choose biggest possible number here
-                        | candidate == p = 0 -- TODO see above
-                        | otherwise = acos $ dot dirPrev (dir p candidate)
+                        | candidate `elem` hull = - 2 -- already added
+                        | candidate == p = - 2 -- same point
+                        | ccw dirPrev (dir p candidate) = - 2 -- left turn
+                        | otherwise = negate $ dot dirPrev (dir p candidate) -- right turn, dot yielding how steep it turns
 
 -- TODO good results but way too slow
 concaveHull :: Path2D -> Double -> Int -> Path2D

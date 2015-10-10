@@ -51,6 +51,17 @@ cross    (Vec2D x1 y1) (Vec2D x2 y2) = x1 * y2 - x2 * y1
 
 --------------------------------------------------------------------------------
 
+cw :: Vec2D -> Vec2D -> Bool
+cw v1 v2 = cross v1 v2 < 0
+
+ccw :: Vec2D -> Vec2D -> Bool
+ccw v1 v2 = cross v1 v2 > 0
+
+colinear :: Vec2D -> Vec2D -> Bool
+colinear v1 v2 = cross v1 v2 == 0
+
+--------------------------------------------------------------------------------
+
 sub :: Vec2D -> Vec2D -> Vec2D
 sub    (Vec2D x1 y1) (Vec2D x2 y2) = Vec2D (x1 - x2) (y1 - y2)
 
