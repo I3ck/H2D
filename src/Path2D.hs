@@ -300,21 +300,23 @@ convexHull    points = lower ++ upper
 convexHull _ = []
 
 concaveHullKNearest :: Path2D -> Int -> Int -> Path2D
-concaveHullKNearest    points    kNearest dbgMaxIter = buildHull startPoint [] 0
+concaveHullKNearest    points    kNearest dbgMaxIter = buildHull [startPoint] 0
     where
         startPoint = head pSorted
         pSorted = sortByX points
 
-        buildHull :: Vec2D -> Path2D -> Int -> Path2D
-        buildHull p [] iter = buildHull p [p] (iter+1)
-        buildHull    p    hull iter
+        buildHull :: Path2D -> Int -> Path2D
+        buildHull [] _ = []
+        buildHull hull iter
+            | kNearest > length pSorted = hull
             | iter >= dbgMaxIter = hull
             | (pSorted !! next) `elem` hull = hull
-            | otherwise = buildHull (pSorted !! next) (hull ++ [(pSorted !! next)]) (iter+1)
+            | otherwise = buildHull (hull ++ [(pSorted !! next)]) (iter+1)
                 where
+                    p = last hull
                     dirPrev
                         | length hull <= 1 = Vec2D 0.0 1.0
-                        | otherwise = dir (last $ init hull) (last hull)
+                        | otherwise = dir p (last $ init hull)
 
                     --candidates = take kNearest $ sortBy compareDistanceToP pSorted
                     candidates = take kNearest $ map fst $  sortBy (comparing  snd) (zip [0..] distancesToP)
@@ -328,18 +330,16 @@ concaveHullKNearest    points    kNearest dbgMaxIter = buildHull startPoint [] 0
                         | otherwise = distance p x
 
                     chooseNext :: [Int] -> Int
-                    chooseNext    candidates = fst $ maximumBy (comparing snd) (zip [0..] weights)
+                    chooseNext    candidates = fst $ maximumBy compCcw (zip [0..] pCandidates)
                         where
-                            weights = map weightCandidate pCandidates
+                            compCcw :: (Int, Vec2D) -> (Int, Vec2D) -> Ordering
+                            compCcw (i1, v1) (i2, v2)
+                                | v1 `elem` hull = LT
+                                | v2 `elem` hull = GT
+                                | ccw v1 v2 = GT
+                                | cw v1 v2 = LT
+                                | colinear v1 v2 = EQ
                             pCandidates = map (pSorted !!) candidates
-
-                    weightCandidate :: Vec2D -> Double
-                    weightCandidate candidate
-                        | candidate `elem` hull = - 200 -- already added
-                        | candidate == p = - 200 -- same point
-                        | ccw dirPrev (dir p candidate) = - 200 -- left turn
-                        | colinear dirPrev (dir p candidate) = - 200 -- on same line
-                        | otherwise =  acos $  (dot dirPrev (dir p candidate) ) / (absolute (dir p candidate) * absolute (dirPrev))  -- right turn, dot yielding how steep it turns
 
 -- TODO good results but way too slow
 concaveHull :: Path2D -> Double -> Int -> Path2D
