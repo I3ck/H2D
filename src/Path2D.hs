@@ -302,42 +302,44 @@ convexHull _ = []
 concaveHullKNearest :: Path2D -> Int -> Int -> Path2D
 concaveHullKNearest    points    kNearest dbgMaxIter = buildHull startPoint [] 0
     where
-        startPoint = head $ sortByX points
+        startPoint = head pSorted
+        pSorted = sortByX points
 
         buildHull :: Vec2D -> Path2D -> Int -> Path2D
-        buildHull p [] iter = buildHull p [p] (iter+1) 
+        buildHull p [] iter = buildHull p [p] (iter+1)
         buildHull    p    hull iter
             | iter >= dbgMaxIter = hull
-            | (points !! next) `elem` hull = hull
-            | otherwise = buildHull (points !! next) (hull ++ [(points !! next)]) (iter+1)
+            | (pSorted !! next) `elem` hull = hull
+            | otherwise = buildHull (pSorted !! next) (hull ++ [(pSorted !! next)]) (iter+1)
                 where
                     dirPrev
                         | length hull <= 1 = Vec2D 0.0 1.0
                         | otherwise = dir (last $ init hull) (last hull)
 
-                    --candidates = take kNearest $ sortBy compareDistanceToP points
-                    candidates = take kNearest $ map fst $ sortBy (comparing  snd) (zip [0..] distancesToP)
-                        where distancesToP = map distanceToP points
+                    --candidates = take kNearest $ sortBy compareDistanceToP pSorted
+                    candidates = take kNearest $ map fst $  sortBy (comparing  snd) (zip [0..] distancesToP)
+                        where distancesToP = map distanceToP pSorted
                     next = chooseNext candidates --- TODO BUG this is the id in the candidates set, not within the points
 
 
                     distanceToP :: Vec2D -> Double
                     distanceToP   x
-                        | x `elem` hull = 10000000 -- TODO choose biggest possible number here
+                        | x `elem` hull = 1e300 -- TODO choose biggest possible number here
                         | otherwise = distance p x
 
                     chooseNext :: [Int] -> Int
                     chooseNext    candidates = fst $ maximumBy (comparing snd) (zip [0..] weights)
                         where
                             weights = map weightCandidate pCandidates
-                            pCandidates = map (points !!) candidates
+                            pCandidates = map (pSorted !!) candidates
 
                     weightCandidate :: Vec2D -> Double
                     weightCandidate candidate
-                        | candidate `elem` hull = - 2 -- already added
-                        | candidate == p = - 2 -- same point
-                        | ccw dirPrev (dir p candidate) = - 2 -- left turn
-                        | otherwise = negate $ dot dirPrev (dir p candidate) -- right turn, dot yielding how steep it turns
+                        | candidate `elem` hull = - 200 -- already added
+                        | candidate == p = - 200 -- same point
+                        | ccw dirPrev (dir p candidate) = - 200 -- left turn
+                        | colinear dirPrev (dir p candidate) = - 200 -- on same line
+                        | otherwise =  acos $  (dot dirPrev (dir p candidate) ) / (absolute (dir p candidate) * absolute (dirPrev))  -- right turn, dot yielding how steep it turns
 
 -- TODO good results but way too slow
 concaveHull :: Path2D -> Double -> Int -> Path2D
