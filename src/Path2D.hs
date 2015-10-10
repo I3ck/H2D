@@ -299,6 +299,7 @@ convexHull    points = lower ++ upper
         build acc [] = reverse $ tail acc
 convexHull _ = []
 
+-- TODO good results but way too slow
 concaveHull :: Path2D -> Double -> Int -> Path2D
 concaveHull    points    minDist   maxIter = buildHull 0 inital --TODO maxIter / iter might be shifted by 1
     where
@@ -317,7 +318,7 @@ concaveHull    points    minDist   maxIter = buildHull 0 inital --TODO maxIter /
                     idEndLongest | idStartLongest < (length hull - 1) = idStartLongest + 1
                                  | otherwise = 0
 
-        pCreatingFlatestTriangle :: Path2D -> Path2D -> Vec2D -> Vec2D -> Vec2D -- TODO converting too slowly (maybe angle approach is required after all)
+        pCreatingFlatestTriangle :: Path2D -> Path2D -> Vec2D -> Vec2D -> Vec2D -- TODO converting too slowly (maybe angle approach is required after all / or search for steepest, non intersecting triangle)
         pCreatingFlatestTriangle    path      hull      pStart   pEnd = path !! index
             where
                 index = fst $ maximumBy (comparing snd) (zip [0..] flats)
