@@ -299,6 +299,44 @@ convexHull    points = lower ++ upper
         build acc [] = reverse $ tail acc
 convexHull _ = []
 
+concaveHullKNearest :: Path2D -> Int -> Int -> Path2D
+concaveHullKNearest    points    kNearest dbgMaxIter = buildHull startPoint [startPoint] 0
+    where
+        startPoint = head $ sortByY points
+
+        buildHull :: Vec2D -> Path2D -> Int -> Path2D
+        buildHull    p    hull iter
+            | iter >= dbgMaxIter = hull
+            | (points !! next) `elem` hull = hull
+            | otherwise = buildHull (points !! next) (hull ++ [(points !! next)]) (iter+1)
+                where
+                    dirPrev
+                        | length hull <= 1 = Vec2D 0.0 1.0
+                        | otherwise = dir (last $ init hull) (last hull)
+
+                    --candidates = take kNearest $ sortBy compareDistanceToP points
+                    candidates = take kNearest $ map fst $ sortBy (comparing  snd) (zip [0..] distancesToP)
+                        where distancesToP = map distanceToP points
+                    next = chooseNext candidates --- TODO BUG this is the id in the candidates set, not within the points
+
+
+                    distanceToP :: Vec2D -> Double
+                    distanceToP   x
+                        | x == p = 10000000 -- TODO choose biggest possible number here
+                        | otherwise = distance p x
+
+                    chooseNext :: [Int] -> Int
+                    chooseNext    candidates = fst $ maximumBy (comparing snd) (zip [0..] weights)
+                        where
+                            weights = map weightCandidate pCandidates
+                            pCandidates = map (points !!) candidates
+
+                    weightCandidate :: Vec2D -> Double
+                    weightCandidate candidate
+                        | candidate `elem` hull = 0 --TODO choose biggest possible number here
+                        | candidate == p = 0 -- TODO see above
+                        | otherwise = acos $ dot dirPrev (dir p candidate)
+
 -- TODO good results but way too slow
 concaveHull :: Path2D -> Double -> Int -> Path2D
 concaveHull    points    minDist   maxIter = buildHull 0 inital --TODO maxIter / iter might be shifted by 1

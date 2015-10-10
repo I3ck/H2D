@@ -38,6 +38,9 @@ instance Num Vec2D where
    signum (Vec2D a b) = Vec2D (signum a) (signum b)
    fromInteger i = Vec2D (fromInteger i) (fromInteger i)
 
+dir :: Vec2D -> Vec2D -> Vec2D
+dir (Vec2D x1 y1) (Vec2D x2 y2) = Vec2D (x2 - x1) (y2 - y1)
+
 --------------------------------------------------------------------------------
 
 dot :: Vec2D -> Vec2D -> Double
