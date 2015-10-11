@@ -21,6 +21,6 @@ library
   exposed-modules:     Line2D, Moveable, Vec2D, Parseable, Mirrorable, Rotateable, Path2D
   -- other-modules:
   other-extensions:    FlexibleInstances
-  build-depends:       base >=4.8 && <4.9, parallel
+  build-depends:       base >=4.8 && <4.9, parallel, ghc
   hs-source-dirs:      src
   default-language:    Haskell2010

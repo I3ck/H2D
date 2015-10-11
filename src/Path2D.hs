@@ -21,11 +21,14 @@ import Control.Parallel.Strategies (runEval, rpar)
 
 import Vec2D
 import Line2D
+import Debug.Trace
 
 import Data.List
 import Data.Ord (comparing)
 
 type Path2D = [Vec2D]
+
+debug = flip trace
 
 --------------------------------------------------------------------------------
 
@@ -315,8 +318,8 @@ concaveHullKNearest    points    kNearest dbgMaxIter = buildHull [startPoint] 0
                 where
                     p = last hull
                     dirPrev
-                        | length hull <= 1 = Vec2D 0.0 1.0
-                        | otherwise = dir p (last $ init hull)
+                        | length hull <= 1 = Vec2D 1.0 0.0
+                        | otherwise = dir (last $ init hull) p
 
                     --candidates = take kNearest $ sortBy compareDistanceToP pSorted
                     candidates = take kNearest $ map fst $  sortBy (comparing  snd) (zip [0..] distancesToP)
@@ -330,15 +333,36 @@ concaveHullKNearest    points    kNearest dbgMaxIter = buildHull [startPoint] 0
                         | otherwise = distance p x
 
                     chooseNext :: [Int] -> Int
-                    chooseNext    candidates = fst $ maximumBy compCcw (zip [0..] pCandidates)
+                    chooseNext    candidates = fst $ maximumBy compCcw (zip [0..] dirs)
                         where
                             compCcw :: (Int, Vec2D) -> (Int, Vec2D) -> Ordering
                             compCcw (i1, v1) (i2, v2)
-                                | v1 `elem` hull = LT
-                                | v2 `elem` hull = GT
-                                | ccw v1 v2 = GT
-                                | cw v1 v2 = LT
-                                | colinear v1 v2 = EQ
+                                | v1 `elem` hull && not(v2 `elem` hull) = LT            `debug` "1 elem, 2 not"
+                                | not(v1 `elem` hull) && v2 `elem` hull = GT            `debug` "1 not, 2 elem"
+                                | v1 `elem` hull && v2 `elem` hull = EQ                 `debug` "both elem"
+
+                                | ccw p v1 && not (ccw p v2) = GT                       `debug` "1 ccw, 2 not"
+                                | not (ccw p v1) && ccw p v2 = LT                       `debug` "1 not, 2 ccw"
+
+                                | ccw p v1 && ccw p v2 && dot p v1 > dot p v2 = GT      `debug` "both ccw dot1 > dot2"
+                                | ccw p v1 && ccw p v2 && dot p v1 < dot p v2 = LT      `debug` "both ccw dot2 > dot1"
+
+                                | otherwise = EQ                                        `debug` "otherwise"
+
+                                -- | v1 `elem` hull && v2 `elem` hull = EQ
+                                -- | v1 `elem` hull = LT
+                                -- | v2 `elem` hull = GT
+                                -- | cross p v1 > cross p v2 = GT
+                                -- | cross p v1 < cross p v2 = LT
+                                -- | otherwise = EQ
+                                -- | v1 == p = LT
+                                -- | v1 == v2 = EQ
+                                -- | v1 `elem` hull = LT
+                                -- | ccw v1 v2 = GT
+                                -- | cw v1 v2 = LT
+                                -- | colinear v1 v2 = EQ
+                            dirs = map mapping pCandidates
+                                where mapping x = dir p x
                             pCandidates = map (pSorted !!) candidates
 
 -- TODO good results but way too slow
