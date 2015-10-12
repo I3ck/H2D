@@ -322,7 +322,7 @@ concaveHullKNearest    points    kNearest dbgMaxIter = buildHull [startPoint] 0
                         | otherwise = dir (last $ init hull) p
 
                     anglePrev
-                        | length hull <= 1 = 1.5 * pi
+                        | length hull <= 1 = - 0.5 * pi
                         | otherwise = radTo (last $ init hull) p
 
                     --candidates = take kNearest $ sortBy compareDistanceToP pSorted
@@ -341,13 +341,13 @@ concaveHullKNearest    points    kNearest dbgMaxIter = buildHull [startPoint] 0
                         where
                             compCcw :: (Int, Vec2D) -> (Int, Vec2D) -> Ordering
                             compCcw (_, v1) (_, v2)
-                                | v1 `elem` hull && not(v2 `elem` hull) = LT            `debug` "1 elem, 2 not"
-                                | not(v1 `elem` hull) && v2 `elem` hull = GT            `debug` "1 not, 2 elem"
-                                | anglePrev < 0 && abs(pi + anglePrev - (radTo p v1)) > abs(pi + anglePrev - (radTo p v2)) = GT `debug` "GT"
-                                | anglePrev < 0 && abs(pi + anglePrev - (radTo p v1)) < abs(pi + anglePrev - (radTo p v2)) = LT `debug` "LT"
-                                | anglePrev > 0 && abs(pi + anglePrev - (radTo v1 p)) > abs(pi + anglePrev - (radTo v2 p)) = GT `debug` "GT"
-                                | anglePrev > 0 && abs(pi + anglePrev - (radTo v1 p)) < abs(pi + anglePrev - (radTo v2 p)) = LT `debug` "LT"
-                                | otherwise = EQ `debug` "EQ"
+                                | v1 `elem` hull && not(v2 `elem` hull) = LT
+                                | not(v1 `elem` hull) && v2 `elem` hull = GT
+                                | anglePrev < 0 && pi + anglePrev - (radTo p v1) > pi + anglePrev - (radTo p v2) = GT
+                                | anglePrev < 0 && pi + anglePrev - (radTo p v1) < pi + anglePrev - (radTo p v2) = LT
+                                | anglePrev > 0 && pi + anglePrev - (radTo v1 p) > pi + anglePrev - (radTo v2 p) = GT
+                                | anglePrev > 0 && pi + anglePrev - (radTo v1 p) < pi + anglePrev - (radTo v2 p) = LT
+                                | otherwise = EQ
                             pCandidates = map (pSorted !!) candidates
 
 -- TODO good results but way too slow
