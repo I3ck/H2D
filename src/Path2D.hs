@@ -304,7 +304,7 @@ convexHull _ = []
 
 -- TODO add kdtree to find nearest easily
 concaveHullKNearest :: Path2D -> Int -> Int -> Path2D
-concaveHullKNearest    points    kNearest dbgMaxIter = buildHull [startPoint] 0
+concaveHullKNearest    points    kNearest dbgMaxIter = (buildHull [startPoint] 0) ++ [startPoint]
     where
         startPoint = head pSorted
         pSorted = sortByX points
@@ -334,7 +334,8 @@ concaveHullKNearest    points    kNearest dbgMaxIter = buildHull [startPoint] 0
 
                     distanceToP :: Vec2D -> Double
                     distanceToP   x
-                        | x `elem` hull = 1e300 -- TODO choose biggest possible number here
+                        | p == x = 1e300
+                        | x `elem` hull && x /= startPoint = 1e300 -- TODO choose biggest possible number here
                         | otherwise = distance p x
 
                     chooseNext :: [Int] -> Int
@@ -342,6 +343,8 @@ concaveHullKNearest    points    kNearest dbgMaxIter = buildHull [startPoint] 0
                         where
                             compCcw :: (Int, Vec2D) -> (Int, Vec2D) -> Ordering
                             compCcw (_, v1) (_, v2)
+                                | v1 == startPoint = GT
+                                | v2 == startPoint = LT
                                 | v1 `elem` hull && not(v2 `elem` hull) = LT
                                 | not(v1 `elem` hull) && v2 `elem` hull = GT
                                 | anglePrev < 0 && pi + anglePrev - (radTo p v1) > pi + anglePrev - (radTo p v2) = GT
