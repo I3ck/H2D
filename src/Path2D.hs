@@ -302,6 +302,7 @@ convexHull    points = lower ++ upper
         build acc [] = reverse $ tail acc
 convexHull _ = []
 
+-- TODO add kdtree to find nearest easily
 concaveHullKNearest :: Path2D -> Int -> Int -> Path2D
 concaveHullKNearest    points    kNearest dbgMaxIter = buildHull [startPoint] 0
     where
