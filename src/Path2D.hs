@@ -343,8 +343,10 @@ concaveHullKNearest    points    kNearest dbgMaxIter = buildHull [startPoint] 0
                             compCcw (_, v1) (_, v2)
                                 | v1 `elem` hull && not(v2 `elem` hull) = LT            `debug` "1 elem, 2 not"
                                 | not(v1 `elem` hull) && v2 `elem` hull = GT            `debug` "1 not, 2 elem"
-                                | pi + anglePrev - (radTo p v1) > pi + anglePrev - (radTo p v2) = GT `debug` "GT"
-                                | pi + anglePrev - (radTo p v1) < pi + anglePrev - (radTo p v2) = LT `debug` "LT"
+                                | anglePrev < 0 && abs(pi + anglePrev - (radTo p v1)) > abs(pi + anglePrev - (radTo p v2)) = GT `debug` "GT"
+                                | anglePrev < 0 && abs(pi + anglePrev - (radTo p v1)) < abs(pi + anglePrev - (radTo p v2)) = LT `debug` "LT"
+                                | anglePrev > 0 && abs(pi + anglePrev - (radTo v1 p)) > abs(pi + anglePrev - (radTo v2 p)) = GT `debug` "GT"
+                                | anglePrev > 0 && abs(pi + anglePrev - (radTo v1 p)) < abs(pi + anglePrev - (radTo v2 p)) = LT `debug` "LT"
                                 | otherwise = EQ `debug` "EQ"
                             pCandidates = map (pSorted !!) candidates
 
