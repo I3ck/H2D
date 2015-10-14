@@ -347,11 +347,16 @@ concaveHullKNearest    points    kNearest dbgMaxIter = (buildHull [startPoint] 0
                                 | v2 == startPoint = LT
                                 | v1 `elem` hull && not(v2 `elem` hull) = LT
                                 | not(v1 `elem` hull) && v2 `elem` hull = GT
-                                | anglePrev < 0 && pi + anglePrev - (radTo p v1) > pi + anglePrev - (radTo p v2) = GT
-                                | anglePrev < 0 && pi + anglePrev - (radTo p v1) < pi + anglePrev - (radTo p v2) = LT
-                                | anglePrev > 0 && pi + anglePrev - (radTo v1 p) > pi + anglePrev - (radTo v2 p) = GT
-                                | anglePrev > 0 && pi + anglePrev - (radTo v1 p) < pi + anglePrev - (radTo v2 p) = LT
+                                | anglePrev < 0 && anglePrev - a1       > anglePrev - a2 = GT
+                                | anglePrev < 0 && anglePrev - a1       < anglePrev - a2 = LT
+                                | anglePrev > 0 && anglePrev - a1inv    > anglePrev - a2inv = GT
+                                | anglePrev > 0 && anglePrev + a1inv    < anglePrev - a2inv = LT
                                 | otherwise = EQ
+                                where
+                                    a1 = (radTo p v1)
+                                    a2 = (radTo p v2)
+                                    a1inv = (radTo v1 p)
+                                    a2inv = (radTo v2 p)
                             pCandidates = map (pSorted !!) candidates
 
 -- TODO good results but way too slow
