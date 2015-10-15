@@ -318,21 +318,10 @@ concaveHullKNearest    points    kNearest dbgMaxIter = (buildHull [startPoint] 0
             | otherwise = buildHull (hull ++ [(pSorted !! next)]) (iter+1)
                 where
                     p = last hull
-                    pPrev
-                        | length hull <= 1 = p
-                        | otherwise = last $ init hull
-                    dirPrev
-                        | length hull <= 1 = Vec2D 0.0 (- 1.0)
-                        | otherwise = dir (last $ init hull) p
-
-                    anglePrev
-                        | length hull <= 1 = - 0.5 * pi
-                        | otherwise = radTo (last $ init hull) p
 
                     candidates = take kNearest $ map fst $  sortBy (comparing  snd) (zip [0..] distancesToP)
                         where distancesToP = map distanceToP pSorted
                     next = chooseNext candidates
-
 
                     distanceToP :: Vec2D -> Double
                     distanceToP   x
