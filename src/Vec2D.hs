@@ -20,6 +20,8 @@ data Vec2D = Vec2D {
     y :: Double
 } deriving (Show, Read)
 
+type IdVec2D = (Int, Vec2D)
+
 instance Eq Vec2D where
     (==) (Vec2D x1 y1) (Vec2D x2 y2) = x1 == x2 && y1 == y2
     (/=) (Vec2D x1 y1) (Vec2D x2 y2) = x1 /= x2 || y1 /= y2

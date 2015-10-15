@@ -27,6 +27,7 @@ import Data.List
 import Data.Ord (comparing)
 
 type Path2D = [Vec2D]
+type IdPath2D = [IdVec2D]
 
 debug = flip trace
 
@@ -326,13 +327,13 @@ concaveHullKNearest    points    kNearest maxIter = (buildHull [startPoint] 0) +
                     distanceToP :: Vec2D -> Double
                     distanceToP   x
                         | p == x = 1e300
-                        | x `elem` hull && x /= startPoint = 1e300 -- TODO choose biggest possible number here
+                        | x /= startPoint && x `elem` hull = 1e300 -- TODO choose biggest possible number here
                         | otherwise = sqrDistance p x
 
                     chooseNext :: [Int] -> Int
                     chooseNext    idCandidates = fst $ maximumBy compCcw (zip idCandidates pCandidates)
                         where
-                            compCcw :: (Int, Vec2D) -> (Int, Vec2D) -> Ordering
+                            compCcw :: IdVec2D -> IdVec2D -> Ordering
                             compCcw (_, v1) (_, v2)
                                 | v1 == startPoint = GT
                                 | v2 == startPoint = LT
