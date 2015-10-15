@@ -329,7 +329,6 @@ concaveHullKNearest    points    kNearest dbgMaxIter = (buildHull [startPoint] 0
                         | length hull <= 1 = - 0.5 * pi
                         | otherwise = radTo (last $ init hull) p
 
-                    --candidates = take kNearest $ sortBy compareDistanceToP pSorted
                     candidates = take kNearest $ map fst $  sortBy (comparing  snd) (zip [0..] distancesToP)
                         where distancesToP = map distanceToP pSorted
                     next = chooseNext candidates
@@ -358,7 +357,7 @@ concaveHullKNearest    points    kNearest dbgMaxIter = (buildHull [startPoint] 0
 
                                 | distance p v1 < distance p v2 = GT
                                 | distance p v1 > distance p v2 = LT
-                                
+
                                 | otherwise = EQ
                                 where
                                     a1 = (radTo p v1)
@@ -367,11 +366,9 @@ concaveHullKNearest    points    kNearest dbgMaxIter = (buildHull [startPoint] 0
                                     a2inv = (radTo v2 p)
                                     turn :: Vec2D -> Vec2D -> Vec2D -> Int
                                     turn p q r
-                                        | res == 0  = 0 -- same
-                                        | res > 0   = 1 -- right
-                                        | res < 0   = -1 -- left
-                                        where
-                                            res = (x q - x p) * (y r - y p) - (x r - x p) * (y q - y p)
+                                        | ccw ( dir p q) (dir q r) = 1
+                                        | cw ( dir p q) (dir q r)  = -1
+                                        | otherwise = 0
                             pCandidates = map (pSorted !!) candidates
 
 -- TODO good results but way too slow
