@@ -304,7 +304,7 @@ convexHull _ = []
 
 -- TODO add kdtree to find nearest easily
 concaveHullKNearest :: Path2D -> Int -> Int -> Path2D
-concaveHullKNearest    points    kNearest dbgMaxIter = (buildHull [startPoint] 0) ++ [startPoint]
+concaveHullKNearest    points    kNearest maxIter = (buildHull [startPoint] 0) ++ [startPoint]
     where
         startPoint = head pSorted
         pSorted = sortByX points
@@ -313,15 +313,15 @@ concaveHullKNearest    points    kNearest dbgMaxIter = (buildHull [startPoint] 0
         buildHull [] _ = []
         buildHull hull iter
             | kNearest > length pSorted = hull
-            | iter >= dbgMaxIter = hull
+            | iter >= maxIter = hull
             | (pSorted !! next) `elem` hull = hull
             | otherwise = buildHull (hull ++ [(pSorted !! next)]) (iter+1)
                 where
                     p = last hull
 
-                    candidates = take kNearest $ map fst $  sortBy (comparing  snd) (zip [0..] distancesToP)
+                    idCandidates = take kNearest $ map fst $  sortBy (comparing  snd) (zip [0..] distancesToP)
                         where distancesToP = map distanceToP pSorted
-                    next = chooseNext candidates
+                    next = chooseNext idCandidates
 
                     distanceToP :: Vec2D -> Double
                     distanceToP   x
@@ -330,7 +330,7 @@ concaveHullKNearest    points    kNearest dbgMaxIter = (buildHull [startPoint] 0
                         | otherwise = sqrDistance p x
 
                     chooseNext :: [Int] -> Int
-                    chooseNext    candidates = fst $ maximumBy compCcw (zip candidates pCandidates)
+                    chooseNext    idCandidates = fst $ maximumBy compCcw (zip idCandidates pCandidates)
                         where
                             compCcw :: (Int, Vec2D) -> (Int, Vec2D) -> Ordering
                             compCcw (_, v1) (_, v2)
@@ -349,16 +349,12 @@ concaveHullKNearest    points    kNearest dbgMaxIter = (buildHull [startPoint] 0
 
                                 | otherwise = EQ
                                 where
-                                    a1 = (radTo p v1)
-                                    a2 = (radTo p v2)
-                                    a1inv = (radTo v1 p)
-                                    a2inv = (radTo v2 p)
                                     turn :: Vec2D -> Vec2D -> Vec2D -> Int
                                     turn p q r
                                         | ccw ( dir p q) (dir q r) = 1
                                         | cw ( dir p q) (dir q r)  = -1
                                         | otherwise = 0
-                            pCandidates = map (pSorted !!) candidates
+                            pCandidates = map (pSorted !!) idCandidates
 
 -- TODO good results but way too slow
 concaveHull :: Path2D -> Double -> Int -> Path2D
