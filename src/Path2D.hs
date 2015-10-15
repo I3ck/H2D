@@ -344,8 +344,8 @@ concaveHullKNearest    points    kNearest dbgMaxIter = (buildHull [startPoint] 0
                                 | turn p v1 v2 > 0 = GT
                                 | turn p v1 v2 < 0 = LT
 
-                                | distance p v1 < distance p v2 = GT
-                                | distance p v1 > distance p v2 = LT
+                                | distance p v1 < distance p v2 = LT
+                                | distance p v1 > distance p v2 = GT
 
                                 | otherwise = EQ
                                 where
