@@ -348,15 +348,17 @@ concaveHullKNearest    points    kNearest dbgMaxIter = (buildHull [startPoint] 0
                             compCcw (_, v1) (_, v2)
                                 | v1 == startPoint = GT
                                 | v2 == startPoint = LT
+
                                 | v1 `elem` hull && not(v2 `elem` hull) = LT
                                 | not(v1 `elem` hull) && v2 `elem` hull = GT
+                                | v1 `elem` hull && v2 `elem` hull = EQ
+
                                 | turn p v1 v2 > 0 = GT
                                 | turn p v1 v2 < 0 = LT
+
                                 | distance p v1 < distance p v2 = GT
                                 | distance p v1 > distance p v2 = LT
-                                -- | turn pPrev v1 v2 < turn pPrev v2 v1 = LT
-                                -- | anglePrev - a1 > anglePrev - a2 = GT
-                                -- | anglePrev - a1 < anglePrev - a2 = LT
+                                
                                 | otherwise = EQ
                                 where
                                     a1 = (radTo p v1)
