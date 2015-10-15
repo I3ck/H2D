@@ -318,6 +318,9 @@ concaveHullKNearest    points    kNearest dbgMaxIter = (buildHull [startPoint] 0
             | otherwise = buildHull (hull ++ [(pSorted !! next)]) (iter+1)
                 where
                     p = last hull
+                    pPrev
+                        | length hull <= 1 = p
+                        | otherwise = last $ init hull
                     dirPrev
                         | length hull <= 1 = Vec2D 0.0 (- 1.0)
                         | otherwise = dir (last $ init hull) p
@@ -347,16 +350,26 @@ concaveHullKNearest    points    kNearest dbgMaxIter = (buildHull [startPoint] 0
                                 | v2 == startPoint = LT
                                 | v1 `elem` hull && not(v2 `elem` hull) = LT
                                 | not(v1 `elem` hull) && v2 `elem` hull = GT
-                                | anglePrev < 0 && anglePrev - a1       > anglePrev - a2 = GT
-                                | anglePrev < 0 && anglePrev - a1       < anglePrev - a2 = LT
-                                | anglePrev > 0 && anglePrev - a1inv    > anglePrev - a2inv = GT
-                                | anglePrev > 0 && anglePrev + a1inv    < anglePrev - a2inv = LT
+                                | turn p v1 v2 > 0 = GT
+                                | turn p v1 v2 < 0 = LT
+                                | distance p v1 < distance p v2 = GT
+                                | distance p v1 > distance p v2 = LT
+                                -- | turn pPrev v1 v2 < turn pPrev v2 v1 = LT
+                                -- | anglePrev - a1 > anglePrev - a2 = GT
+                                -- | anglePrev - a1 < anglePrev - a2 = LT
                                 | otherwise = EQ
                                 where
                                     a1 = (radTo p v1)
                                     a2 = (radTo p v2)
                                     a1inv = (radTo v1 p)
                                     a2inv = (radTo v2 p)
+                                    turn :: Vec2D -> Vec2D -> Vec2D -> Int
+                                    turn p q r
+                                        | res == 0  = 0 -- same
+                                        | res > 0   = 1 -- right
+                                        | res < 0   = -1 -- left
+                                        where
+                                            res = (x q - x p) * (y r - y p) - (x r - x p) * (y q - y p)
                             pCandidates = map (pSorted !!) candidates
 
 -- TODO good results but way too slow
