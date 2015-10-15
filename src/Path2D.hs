@@ -327,7 +327,7 @@ concaveHullKNearest    points    kNearest dbgMaxIter = (buildHull [startPoint] 0
                     distanceToP   x
                         | p == x = 1e300
                         | x `elem` hull && x /= startPoint = 1e300 -- TODO choose biggest possible number here
-                        | otherwise = distance p x
+                        | otherwise = sqrDistance p x
 
                     chooseNext :: [Int] -> Int
                     chooseNext    candidates = fst $ maximumBy compCcw (zip candidates pCandidates)
@@ -344,8 +344,8 @@ concaveHullKNearest    points    kNearest dbgMaxIter = (buildHull [startPoint] 0
                                 | turn p v1 v2 > 0 = GT
                                 | turn p v1 v2 < 0 = LT
 
-                                | distance p v1 < distance p v2 = LT
-                                | distance p v1 > distance p v2 = GT
+                                | sqrDistance p v1 < sqrDistance p v2 = LT
+                                | sqrDistance p v1 > sqrDistance p v2 = GT
 
                                 | otherwise = EQ
                                 where
