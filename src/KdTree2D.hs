@@ -31,10 +31,6 @@ data KdTree2D v  = Node { left   :: KdTree2D v
                  | Kempty
     deriving (Eq, Ord, Show)
 
---instance Show (KdTree2D Vec2D) where
-    --show Kempty = "[]"
-    --show (Node left val right) = "(" ++ show left ++ " " ++ show val ++ " " ++ show right ++ ")"
-
 instance Foldable KdTree2D where
     foldr f init Kempty = init
     foldr f init (Node left val right axis) = foldr f z3 left
