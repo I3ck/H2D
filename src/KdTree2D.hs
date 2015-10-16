@@ -75,9 +75,9 @@ buildTree ps level = node
 removeVec :: KdTree2D Vec2D -> Vec2D -> KdTree2D Vec2D
 removeVec Kempty _ = Kempty
 removeVec (Node left val right axis) vRem
-    | vRem == val                                                = buildTree (tree2list left ++ tree2list right) axis
-    | dimComp vRem val axis == LT || dimComp vRem val axis == EQ = Node (removeVec left vRem) val right axis --TODO simplify condition
-    | otherwise                                                  = Node left                  val (removeVec right vRem) axis
+    | vRem == val                  = buildTree (tree2list left ++ tree2list right) axis
+    | dimComp vRem val axis == GT  = Node left                  val (removeVec right vRem) axis
+    | otherwise                    = Node (removeVec left vRem) val right axis
 
 dimComp :: Vec2D -> Vec2D -> Int -> Ordering
 dimComp v1 v2 dim
@@ -104,8 +104,8 @@ kNearest tree p n = near : kNearest newTree p (n-1)
         nearest Kempty _ = Nothing
         nearest (Node Kempty val Kempty axis) _ = Just val
         nearest (Node left val right axis) p
-            | dimComp p val axis == LT || dimComp p val axis == EQ = find left right --TODO simplify condition
-            | otherwise = find right left
+            | dimComp p val axis == GT = find right left
+            | otherwise = find left right
             where
                 find :: KdTree2D Vec2D -> KdTree2D Vec2D -> Maybe Vec2D
                 find t1 t2 = Just $ minimumBy (compDistance p) $ ps2
