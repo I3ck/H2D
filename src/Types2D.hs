@@ -13,11 +13,19 @@ You should have received a copy of the GNU Lesser General Public License
 along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
-module Line2D where
+module Types2D where
 
-import Vec2D
+data Vec2D = Vec2D {
+    x :: Double,
+    y :: Double
+} deriving (Show, Read)
+
+type IdVec2D = (Int, Vec2D)
 
 data Line2D = Line2D {
     p1 :: Vec2D,
     p2 :: Vec2D
 } deriving (Show, Read)
+
+type Path2D = [Vec2D]
+type IdPath2D = [IdVec2D]

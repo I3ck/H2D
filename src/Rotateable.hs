@@ -17,6 +17,7 @@ along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 
 module Rotateable where
 
+import Types2D
 import Vec2D
 import Path2D
 

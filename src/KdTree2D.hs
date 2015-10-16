@@ -20,27 +20,9 @@ import Debug.Trace
 import Data.List (minimumBy)
 import Data.Maybe (fromJust, maybeToList)
 
+import Types2D
 import Vec2D
 import Path2D
-
-data KdTree2D v  = Node { left   :: KdTree2D v
-                        , val    :: v
-                        , right  :: KdTree2D v
-                        , axis   :: Int
-                        }
-                 | Kempty
-    deriving (Eq, Ord, Show)
-
-instance Foldable KdTree2D where
-    foldr f init Kempty = init
-    foldr f init (Node left val right axis) = foldr f z3 left
-        where
-            z3 = f val z2
-            z2 = foldr f init right
-
-instance Functor KdTree2D where
-    fmap _ Kempty = Kempty
-    fmap f (Node left val right axis) = Node (fmap f left) (f val) (fmap f right) axis
 
 tree2list :: KdTree2D Vec2D -> Path2D
 tree2list tree = foldr (:) [] tree

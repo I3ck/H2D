@@ -19,15 +19,12 @@ module Path2D where
 
 import Control.Parallel.Strategies (runEval, rpar)
 
+import Types2D
 import Vec2D
-import Line2D
 import Debug.Trace
 
 import Data.List
 import Data.Ord (comparing)
-
-type Path2D = [Vec2D]
-type IdPath2D = [IdVec2D]
 
 debug = flip trace
 

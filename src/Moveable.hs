@@ -16,8 +16,7 @@ along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 {-# LANGUAGE FlexibleInstances #-}
 module Moveable where
 
-import Vec2D
-import Path2D
+import Types2D
 
 class Moveable a where
     move :: a -> Vec2D -> a

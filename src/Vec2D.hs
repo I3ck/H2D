@@ -15,30 +15,7 @@ along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 
 module Vec2D where
 
-data Vec2D = Vec2D {
-    x :: Double,
-    y :: Double
-} deriving (Show, Read)
-
-type IdVec2D = (Int, Vec2D)
-
-instance Eq Vec2D where
-    (==) (Vec2D x1 y1) (Vec2D x2 y2) = x1 == x2 && y1 == y2
-    (/=) (Vec2D x1 y1) (Vec2D x2 y2) = x1 /= x2 || y1 /= y2
-
-instance Ord Vec2D where
-    (<) (Vec2D x1 y1) (Vec2D x2 y2) = x1 < x2 || (x1 == x2 && y1 < y2)
-    (<=) vec1 vec2 = vec1 < vec2 || vec1 == vec2
-    (>) (Vec2D x1 y1) (Vec2D x2 y2) = x1 > x2 || (x1 == x2 && y1 > y2)
-    (>=) vec1 vec2 = vec1 > vec2 || vec1 == vec2
-
-instance Num Vec2D where
-   (Vec2D a b) + (Vec2D c d) = Vec2D (a+c) (b+d)
-   (Vec2D a b) * (Vec2D c d) = Vec2D (a*c) (b*d)
-   (Vec2D a b) - (Vec2D c d) = Vec2D (a-c) (b-d)
-   abs    (Vec2D a b) = Vec2D (abs a) (abs b)
-   signum (Vec2D a b) = Vec2D (signum a) (signum b)
-   fromInteger i = Vec2D (fromInteger i) (fromInteger i)
+import Types2D
 
 dir :: Vec2D -> Vec2D -> Vec2D
 dir (Vec2D x1 y1) (Vec2D x2 y2) = norm $ Vec2D (x2 - x1) (y2 - y1)
@@ -97,7 +74,7 @@ sqrDistance :: Vec2D -> Vec2D -> Double
 sqrDistance    (Vec2D x y) (Vec2D a b) = ((x-a)**2) + ((y-b)**2)
 
 compDistance :: Vec2D -> Vec2D -> Vec2D -> Ordering
-compDistance a v1 v2 = sqrDistance a v1 `compare` sqrDistance a v2 
+compDistance a v1 v2 = sqrDistance a v1 `compare` sqrDistance a v2
 
 --------------------------------------------------------------------------------
 

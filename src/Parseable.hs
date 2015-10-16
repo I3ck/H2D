@@ -16,8 +16,7 @@ along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 {-# LANGUAGE FlexibleInstances #-}
 module Parseable where
 
-import Vec2D
-import Path2D
+import Types2D
 
 --TODO read can be used?
 class Parseable a where
