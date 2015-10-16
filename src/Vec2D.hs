@@ -96,6 +96,9 @@ distance    v1 v2 = sqrt( sqrDistance v1 v2 )
 sqrDistance :: Vec2D -> Vec2D -> Double
 sqrDistance    (Vec2D x y) (Vec2D a b) = ((x-a)**2) + ((y-b)**2)
 
+compDistance :: Vec2D -> Vec2D -> Vec2D -> Ordering
+compDistance a v1 v2 = sqrDistance a v1 `compare` sqrDistance a v2 
+
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
