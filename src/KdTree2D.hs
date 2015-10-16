@@ -15,6 +15,8 @@ along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 
 module KdTree2D where
 
+import Debug.Trace
+
 import Data.List (minimumBy)
 import Data.Maybe (fromJust, maybeToList)
 
@@ -22,11 +24,11 @@ import Vec2D
 import Path2D
 
 data KdTree2D v  = Node { left   :: KdTree2D v
-                       , val    :: v
-                       , right  :: KdTree2D v
-                       , axis   :: Int
-                       }
-                  | Kempty
+                        , val    :: v
+                        , right  :: KdTree2D v
+                        , axis   :: Int
+                        }
+                 | Kempty
     deriving (Eq, Ord, Show)
 
 --instance Show (KdTree2D Vec2D) where
@@ -91,7 +93,7 @@ dimVal v dim
     | dim == 1 = y v
 
 kNearest :: KdTree2D Vec2D -> Vec2D -> Int -> Path2D
-kNearest kEmpty _ _ = []
+kNearest Kempty _ _ = []
 kNearest _ _ n | n <= 0 = []
 kNearest tree p n = near : kNearest newTree p (n-1)
     where
