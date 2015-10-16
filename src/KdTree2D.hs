@@ -13,6 +13,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
+-- TODO create a version which stores the ids of points (required for concave)
+
 module KdTree2D where
 
 import Debug.Trace
