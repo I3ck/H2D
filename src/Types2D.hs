@@ -20,12 +20,57 @@ data Vec2D = Vec2D {
     y :: Double
 } deriving (Show, Read)
 
+instance Eq Vec2D where
+    (==) (Vec2D x1 y1) (Vec2D x2 y2) = x1 == x2 && y1 == y2
+    (/=) (Vec2D x1 y1) (Vec2D x2 y2) = x1 /= x2 || y1 /= y2
+
+instance Ord Vec2D where
+    (<) (Vec2D x1 y1) (Vec2D x2 y2) = x1 < x2 || (x1 == x2 && y1 < y2)
+    (<=) vec1 vec2 = vec1 < vec2 || vec1 == vec2
+    (>) (Vec2D x1 y1) (Vec2D x2 y2) = x1 > x2 || (x1 == x2 && y1 > y2)
+    (>=) vec1 vec2 = vec1 > vec2 || vec1 == vec2
+
+instance Num Vec2D where
+   (Vec2D a b) + (Vec2D c d) = Vec2D (a+c) (b+d)
+   (Vec2D a b) * (Vec2D c d) = Vec2D (a*c) (b*d)
+   (Vec2D a b) - (Vec2D c d) = Vec2D (a-c) (b-d)
+   abs    (Vec2D a b) = Vec2D (abs a) (abs b)
+   signum (Vec2D a b) = Vec2D (signum a) (signum b)
+   fromInteger i = Vec2D (fromInteger i) (fromInteger i)
+
 type IdVec2D = (Int, Vec2D)
+
+--------------------------------------------------------------------------------
 
 data Line2D = Line2D {
     p1 :: Vec2D,
     p2 :: Vec2D
 } deriving (Show, Read)
 
+--------------------------------------------------------------------------------
+
 type Path2D = [Vec2D]
 type IdPath2D = [IdVec2D]
+
+--------------------------------------------------------------------------------
+
+data KdTree2D v  = Node { left   :: KdTree2D v
+                        , val    :: v
+                        , right  :: KdTree2D v
+                        , axis   :: Int
+                        }
+                 | Kempty
+    deriving (Eq, Ord, Show)
+
+instance Foldable KdTree2D where
+    foldr f init Kempty = init
+    foldr f init (Node left val right axis) = foldr f z3 left
+        where
+            z3 = f val z2
+            z2 = foldr f init right
+
+instance Functor KdTree2D where
+    fmap _ Kempty = Kempty
+    fmap f (Node left val right axis) = Node (fmap f left) (f val) (fmap f right) axis
+
+--------------------------------------------------------------------------------
