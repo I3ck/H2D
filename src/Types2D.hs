@@ -63,8 +63,8 @@ data KdTree2D v  = Node { left   :: KdTree2D v
     deriving (Eq, Ord, Show)
 
 instance Foldable KdTree2D where
-    foldr f init Kempty = init
-    foldr f init (Node left val right axis) = foldr f z3 left
+    foldr _ init Kempty = init
+    foldr f init (Node left val right _) = foldr f z3 left
         where
             z3 = f val z2
             z2 = foldr f init right

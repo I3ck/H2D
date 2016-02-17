@@ -21,7 +21,6 @@ import Data.Ord (comparing)
 import Types2D
 import Vec2D
 import Path2D
-import KdTree2D
 
 concaveHullKNearest :: Path2D -> Int -> Int -> Path2D
 concaveHullKNearest    points    kNearest maxIter = (buildHull [startPoint] 0) ++ [startPoint]

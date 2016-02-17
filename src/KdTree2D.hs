@@ -17,8 +17,6 @@ along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 
 module KdTree2D where
 
-import Debug.Trace
-
 import Data.List (minimumBy)
 import Data.Maybe (fromJust, maybeToList)
 
@@ -70,7 +68,7 @@ dimComp v1 v2 dim
 dimVal :: Vec2D -> Int -> Double -- TODO use this in other methods (e.g. dimComp)
 dimVal v dim
     | dim == 0 = x v
-    | dim == 1 = y v
+    | otherwise = y v
 
 kNearest :: KdTree2D Vec2D -> Vec2D -> Int -> Path2D
 kNearest Kempty _ _ = []
@@ -82,7 +80,7 @@ kNearest tree p n = near : kNearest newTree p (n-1)
 
         nearest :: KdTree2D Vec2D -> Vec2D -> Maybe Vec2D
         nearest Kempty _ = Nothing
-        nearest (Node Kempty val Kempty axis) _ = Just val
+        nearest (Node Kempty val Kempty _) _ = Just val
         nearest (Node left val right axis) p
             | dimComp p val axis == GT = find right left
             | otherwise = find left right

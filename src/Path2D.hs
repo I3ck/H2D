@@ -31,39 +31,40 @@ debug = flip trace
 --------------------------------------------------------------------------------
 
 boundingBox :: Path2D -> Path2D
+boundingBox [] = [center, center, center, center]
+    where
+        center = Vec2D 0.0 0.0
 boundingBox    path = [vecMinMin, vecMinMax, vecMaxMin, vecMaxMax]
     where
         vecMinMin = Vec2D (minX path) (minY path)
         vecMinMax = Vec2D (minX path) (maxY path)
         vecMaxMin = Vec2D (maxX path) (minY path)
         vecMaxMax = Vec2D (maxX path) (maxY path)
-boundingBox _ = [center, center, center, center]
-    where
-        center = Vec2D 0.0 0.0
 
 minX :: Path2D -> Double
-minX    [(Vec2D x y)] = x
-minX    ((Vec2D x y):xs) = min x $ minX xs
+minX    [(Vec2D x _)] = x
+minX    ((Vec2D x _):xs) = min x $ minX xs
 minX    _ = 0.0
 
 minY :: Path2D -> Double
-minY    [(Vec2D x y)] = y
-minY    ((Vec2D x y):xs) = min y $ minY xs
+minY    [(Vec2D _ y)] = y
+minY    ((Vec2D _ y):xs) = min y $ minY xs
 minY    _ = 0.0
 
 maxX :: Path2D -> Double
-maxX    [(Vec2D x y)] = x
-maxX    ((Vec2D x y):xs) = max x $ maxX xs
+maxX    [(Vec2D x _)] = x
+maxX    ((Vec2D x _):xs) = max x $ maxX xs
 maxX    _ = 0.0
 
 maxY :: Path2D -> Double
-maxY    [(Vec2D x y)] = y
-maxY    ((Vec2D x y):xs) = max y $ maxY xs
+maxY    [(Vec2D _ y)] = y
+maxY    ((Vec2D _ y):xs) = max y $ maxY xs
 maxY    _ = 0.0
 
 --------------------------------------------------------------------------------
 
 sortByX :: Path2D -> Path2D
+sortByX [] = []
 sortByX    path = sortBy compX path
     where
         compX :: Vec2D -> Vec2D -> Ordering
@@ -71,9 +72,9 @@ sortByX    path = sortBy compX path
             | x1 > x2 = GT
             | x1 < x2 = LT
             | x1 == x2 = compare y1 y2
-sortByX _ = []
 
 sortByY :: Path2D -> Path2D
+sortByY [] = []
 sortByY    path = sortBy compY path
     where
         compY :: Vec2D -> Vec2D -> Ordering
@@ -81,7 +82,6 @@ sortByY    path = sortBy compY path
             | y1 > y2 = GT
             | y1 < y2 = LT
             | y1 == y2 = compare x1 x2
-sortByY _ = []
 
 --------------------------------------------------------------------------------
 
@@ -90,70 +90,70 @@ pathLength    (x:y:xs) = distance x y + pathLength xs --TODO possible bug, since
 pathLength    _ = 0
 
 pathSize :: Path2D -> Double
-pathSize    (x:xs) = 1 + pathSize xs
+pathSize    (_:xs) = 1 + pathSize xs
 pathSize    _ = 0
 
 averageDistance :: Path2D -> Double
+averageDistance    [] = 0
 averageDistance    path = (pathLength path) / (pathSize path - 1)
-averageDistance    _ = 0
 
 pathCenter :: Path2D -> Vec2D
+pathCenter [] = (Vec2D 0.0 0.0)
 pathCenter    path = Vec2D ((sumX path) / vecs) ((sumY path) / vecs)
     where
         vecs = pathSize path
 
         sumX :: Path2D -> Double
-        sumX    ((Vec2D x y):xs) = x + sumX xs
+        sumX    ((Vec2D x _):xs) = x + sumX xs
         sumX    _ = 0
 
         sumY :: Path2D -> Double
-        sumY    ((Vec2D x y):xs) = y + sumY xs
+        sumY    ((Vec2D _ y):xs) = y + sumY xs
         sumY    _ = 0
-pathCenter _ = (Vec2D 0.0 0.0)
 
 --------------------------------------------------------------------------------
 
 removeAbove :: Path2D -> Vec2D -> Path2D
-removeAbove    path (Vec2D xother yother) = filter belowOrEqual path
+removeAbove    [] _ = []
+removeAbove    path (Vec2D _ yother) = filter belowOrEqual path
     where
         belowOrEqual :: Vec2D -> Bool
-        belowOrEqual    (Vec2D xthis ythis) = ythis <= yother
-removeAbove _ _ = []
+        belowOrEqual    (Vec2D _ ythis) = ythis <= yother
 
 removeBelow :: Path2D -> Vec2D -> Path2D
-removeBelow    path (Vec2D xother yother) = filter aboveOrEqual path
+removeBelow    [] _ = []
+removeBelow    path (Vec2D _ yother) = filter aboveOrEqual path
     where
         aboveOrEqual :: Vec2D -> Bool
-        aboveOrEqual    (Vec2D xthis ythis) = ythis >= yother
-removeBelow _ _ = []
+        aboveOrEqual    (Vec2D _ ythis) = ythis >= yother
 
 removeLeftOf :: Path2D -> Vec2D -> Path2D
-removeLeftOf    path (Vec2D xother yother) = filter rightOfOrEqual path
+removeLeftOf    [] _ = []
+removeLeftOf    path (Vec2D xother _) = filter rightOfOrEqual path
     where
         rightOfOrEqual :: Vec2D -> Bool
-        rightOfOrEqual    (Vec2D xthis ythis) = xthis >= xother
-removeLeftOf _ _ = []
+        rightOfOrEqual    (Vec2D xthis _) = xthis >= xother
 
 removeRightOf :: Path2D -> Vec2D -> Path2D
-removeRightOf    path (Vec2D xother yother) = filter leftOfOrEqual path
+removeRightOf    [] _ = []
+removeRightOf    path (Vec2D xother _) = filter leftOfOrEqual path
     where
         leftOfOrEqual :: Vec2D -> Bool
-        leftOfOrEqual    (Vec2D xthis ythis) = xthis <= xother
-removeRightOf _ _ = []
+        leftOfOrEqual    (Vec2D xthis _) = xthis <= xother
 
 removeCloserTo :: Path2D -> Vec2D -> Double -> Path2D
+removeCloserTo    [] _ _ = []
 removeCloserTo    path other minDistance = filter furtherApart path
     where
         furtherApart :: Vec2D -> Bool
         furtherApart    this = distance this other > minDistance
-removeCloserTo _ _ _ = []
 
 removeMoreDistantTo :: Path2D -> Vec2D -> Double -> Path2D
+removeMoreDistantTo    [] _ _ = []
 removeMoreDistantTo    path      other    maxDistance = filter closerTo path
     where
         closerTo :: Vec2D -> Bool
         closerTo    this = distance this other < maxDistance
-removeMoreDistantTo _ _ _ = []
 
 --------------------------------------------------------------------------------
 
@@ -164,14 +164,18 @@ insertAfter    pos    vec      path = before ++ (vec:after)
 --------------------------------------------------------------------------------
 
 intersectionsPP :: Path2D -> Path2D -> Path2D
+intersectionsPP    [] _ = []
+intersectionsPP    _ [] = []
+intersectionsPP    [_] _ = []
+intersectionsPP    _ [_] = []
 intersectionsPP    (p1:p2:ps) other = runEval ( rpar (intersectionsLP (Line2D p1 p2) other)) ++ runEval (rpar (intersectionsPP (p2:ps) other) )
-intersectionsPP _ _ = []
 
 --------------------------------------------------------------------------------
 
 intersectionsLP :: Line2D -> Path2D -> Path2D
+intersectionsLP    _ [] = []
+intersectionsLP    _ [_] = []
 intersectionsLP    line1     (p3:p4:ps) =  intersectionsLL line1 (Line2D p3 p4) ++ intersectionsLP line1 (p4:ps)
-intersectionsLP _ _ = []
 
 --------------------------------------------------------------------------------
 
@@ -198,7 +202,6 @@ intersectionsLL    (Line2D p1 p2) (Line2D q1 q2)
 
         inBetween :: Double -> Double -> Double -> Bool
         inBetween    border1   border2   value = (value >= border1 && value <= border2) || (value >= border2 && value <= border1)
-intersectionsLL _ _ = []
 
 --------------------------------------------------------------------------------
 
@@ -211,7 +214,6 @@ createInvolutCircle    nPoints diameter radStart  radEnd    (Vec2D centerX cente
                 x = centerX + diameter/2.0 * (cos current + current * sin current)
                 y = centerY + diameter/2.0 * (sin current - current * cos current)
                 current = fromIntegral i * abs (radEnd - radStart) / (fromIntegral nPoints - 1.0)
-createInvolutCircle _ _ _ _ _ = []
 
 --------------------------------------------------------------------------------
 
@@ -224,7 +226,6 @@ createArc    nPoints diameter radStart  radEnd    (Vec2D centerX centerY) = map 
                 x = centerX + diameter/2.0 * cos(radians);
                 y = centerY + diameter/2.0 * sin(radians);
                 radians = radStart + fromIntegral i * abs (radEnd - radStart) / (fromIntegral nPoints - 1.0)
-createArc _ _ _ _ _ = []
 
 --------------------------------------------------------------------------------
 
@@ -237,7 +238,6 @@ createEllipse    nPoints a        b         rad       (Vec2D centerX centerY) = 
                 x = centerX + a * cos current * cos rad - b * sin current * sin rad
                 y = centerY + a * cos current * sin rad + b * sin current * cos rad
                 current = fromIntegral i * 2.0 * pi / (fromIntegral nPoints - 1.0)
-createEllipse _ _ _ _ _ = []
 
 --------------------------------------------------------------------------------
 
@@ -248,7 +248,6 @@ createRectangle    width     height    (Vec2D centerX centerY) = [p1, p2, p3, p4
         p2 = Vec2D (centerX + width/2.0) (centerY - height/2.0)
         p3 = Vec2D (centerX + width/2.0) (centerY + height/2.0)
         p4 = Vec2D (centerX - width/2.0) (centerY + height/2.0)
-createRectangle _ _ _ = []
 
 --------------------------------------------------------------------------------
 
@@ -282,6 +281,8 @@ bezier    path      t       = ( Vec2D{x = 1.0 - t, y = 1.0 - t} * (bezier (init 
 -- monotone chain algorithm
 -- https://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain#Haskell
 convexHull :: Path2D -> Path2D
+convexHull [] = []
+convexHull [x] = [x]
 convexHull    points = lower ++ upper
   where
     sorted = sort points
@@ -298,7 +299,6 @@ convexHull    points = lower ++ upper
             else build (x:acc) xs
         build acc (x:xs) = build (x:acc) xs
         build acc [] = reverse $ tail acc
-convexHull _ = []
 
 -- TODO good results but way too slow
 concaveHull :: Path2D -> Double -> Int -> Path2D
@@ -334,10 +334,10 @@ concaveHull    points    minDist   maxIter = buildHull 0 inital --TODO maxIter /
 
         startIdOfLongestEdge :: Path2D -> Int
         startIdOfLongestEdge    []   = 0
-        startIdOfLongestEdge    [x]  = 0
+        startIdOfLongestEdge    [_]  = 0
         startIdOfLongestEdge    path = fst $ maximumBy (comparing snd) (zip [0..] ( (distances path) ++ [distance (last path) (head path)] ))
 
         distances :: Path2D -> [Double]
         distances    []    =  []
-        distances    [x]   =  []
+        distances    [_]   =  []
         distances (x:y:xs) = ((distance x y) : (distances (y:xs)))

@@ -2,6 +2,8 @@ instanciate show and read instead of parse and write
 
 fromIntegral realToFrac
 
+many functions should return a Maybe instead of 0 values
+
 drop angle as parameter from ellipse?
 
 many functions dont check for empty lists or lists with 1 element
