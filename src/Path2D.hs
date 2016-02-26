@@ -361,13 +361,13 @@ distPointLine p (l1, l2) = sqrt $ (vX - c1)^2 + (vY - c2)^2
 
 --------------------------------------------------------------------------------
 
-douglasPeucker :: Path2D -> Double -> Path2D
-douglasPeucker path eps | length path < 3 = [start, end]
+douglasPeucker :: Double -> Path2D -> Path2D
+douglasPeucker eps path | length path < 3 = [start, end]
                         | dMax > eps = (init left) ++ right
                         | otherwise  = [start, end]
   where
-    left          = (douglasPeucker (take (index  ) path) eps)
-    right         = (douglasPeucker (drop (index+1) path) eps)
+    left          = douglasPeucker eps (take (index  ) path)
+    right         = douglasPeucker eps (drop (index+1) path)
     (index, dMax) | length distances > 0 = maximumBy (compDists) (zip [1..] distances)
                   | otherwise            = (0, 0)
     distances     = map calcDist (init $ tail path)
