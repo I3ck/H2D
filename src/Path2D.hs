@@ -341,3 +341,35 @@ concaveHull    points    minDist   maxIter = buildHull 0 inital --TODO maxIter /
         distances    []    =  []
         distances    [_]   =  []
         distances (x:y:xs) = ((distance x y) : (distances (y:xs)))
+
+--------------------------------------------------------------------------------
+
+---TODO define somewhere else?
+distPointLine :: Vec2D -> Vec2D -> Vec2D -> Double
+distPointLine p l1 l2 = sqrt $ (vX - c1)^2 + (vY - c2)^2
+  where
+    vX = (a1*a1*c1 - a1*a2*b2 + a1*a2*c2 - 2*a1*b1*c1 + a1*b2*b2 - a1*b2*c2 + a2*a2*b1 - a2*b1*b2 - a2*b1*c2 + b1*b1*c1 + b1*b2*c2)
+         /(a1*a1 - 2*a1*b1 + a2*a2 - 2*a2*b2 + b1*b1 + b2*b2)
+
+    vY = ((a2 - b2) * vX + a1*b2 - a2*b1) / (a1 - b1);
+    a1 = x l1
+    a2 = y l1
+    b1 = x l2
+    b2 = y l2
+    c1 = x p
+    c2 = y p
+
+--------------------------------------------------------------------------------
+
+douglasPeucker :: Path2D -> Double -> Path2D
+douglasPeucker path eps | dMax > eps = (init left) ++ right
+                        | otherwise  = [start, end]
+  where
+    left          = (douglasPeucker (take (index  ) path) eps)
+    right         = (douglasPeucker (drop (index-1) path) eps)
+    (index, dMax) = maximumBy (compDists) (zip [1..] distances)
+    distances     = map calcDist (init $ tail path)
+    calcDist p    = distPointLine p start end
+    end           = last path
+    start         = head path
+    compDists (_, d1) (_, d2) = compare d1 d2
