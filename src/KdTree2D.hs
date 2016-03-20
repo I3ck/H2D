@@ -81,17 +81,22 @@ kNearest tree p n | n == 1    = [near]
         nearest Kempty _ = Nothing
         nearest (Node Kempty val Kempty _) _ = Just val
         nearest (Node left val right axis) p
-            | dimComp p val axis == GT = find right left
+            | checkRight = find right left
             | otherwise = find left right
             where
+                checkRight = dimComp p val axis == GT
+
                 find :: KdTree2D Vec2D -> KdTree2D Vec2D -> Maybe Vec2D
-                find t1 t2 = Just $ minimumBy (compDistance p) $ ps2
-                    where
-                        dimP = dimVal p axis
-                        dimV = dimVal val axis
-                        ps1 = case nearest t1 p of
-                                  Nothing  -> [val]
-                                  Just res -> [res, val]
-                        ps2 | intersects = ps1 ++ maybeToList (nearest t2 p)
-                            | otherwise  = ps1
-                        intersects = (dimP - dimV)^2 <= sqrDistance p val
+                find treeThis treeOther = Just $ minimumBy (compDistance p) $ [closest] ++ (maybeToList valOther)
+                  where
+                    valSearch = dimVal p axis
+                    valParent = dimVal val axis
+
+                    valOther | mustCheckOther = nearest treeOther p
+                             | otherwise      = Nothing
+
+                    mustCheckOther | checkRight = valSearch + bestDistance > valParent
+                                   | otherwise  = valSearch - bestDistance < valParent
+                    bestDistance = distance p closest
+                    closest = minimumBy (compDistance p) $ [val] ++ (maybeToList bestThis)
+                    bestThis = nearest treeThis p
