@@ -59,10 +59,8 @@ removeVec (Node left val right axis) vRem
 
 dimComp :: Vec2D -> Vec2D -> Int -> Ordering
 dimComp v1 v2 dim
-    | dim == 0 && (x v1) > (x v2) = GT
-    | dim == 0 && (x v1) < (x v2) = LT
-    | dim == 1 && (y v1) > (y v2) = GT
-    | dim == 1 && (y v1) < (y v2) = LT
+    | dim == 0 = compare (x v1) (x v2)
+    | dim == 1 = compare (y v1) (y v2)
     | otherwise = EQ
 
 dimVal :: Vec2D -> Int -> Double -- TODO use this in other methods (e.g. dimComp)
