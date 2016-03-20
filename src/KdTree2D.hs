@@ -73,7 +73,8 @@ dimVal v dim
 kNearest :: KdTree2D Vec2D -> Vec2D -> Int -> Path2D
 kNearest Kempty _ _ = []
 kNearest _ _ n | n <= 0 = []
-kNearest tree p n = near : kNearest newTree p (n-1)
+kNearest tree p n | n == 1    = [near]
+                  | otherwise = near : kNearest newTree p (n-1)
     where
         near = fromJust $ nearest tree p
         newTree = removeVec tree near
