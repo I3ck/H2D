@@ -17,13 +17,14 @@ along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 
 module Path2D where
 
-import Control.Parallel.Strategies (runEval, rpar)
+import Control.Parallel.Strategies (runEval, rpar, parMap)
 
 import Types2D
 import Vec2D
 import Debug.Trace
 
 import Data.List
+import Data.List.Split (chunksOf)
 import Data.Ord (comparing)
 
 debug = flip trace
@@ -205,8 +206,12 @@ intersectionsLL    (Line2D p1 p2) (Line2D q1 q2)
 
 --------------------------------------------------------------------------------
 
+---TODO define in other lib or very globally
+chunkParMap :: Int -> (a -> b) -> [a] -> [b]
+chunkParMap chunkSize f l = concat $ parMap rpar (map f) (chunksOf chunkSize l)
+
 createInvolutCircle :: Int -> Double -> Double -> Double -> Vec2D -> Path2D
-createInvolutCircle    nPoints diameter radStart  radEnd    (Vec2D centerX centerY) = map involut [0..(nPoints-1)]
+createInvolutCircle    nPoints diameter radStart  radEnd    (Vec2D centerX centerY) = chunkParMap 10 involut [0..(nPoints-1)]
     where
         involut :: Int -> Vec2D
         involut i = (Vec2D x y)
