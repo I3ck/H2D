@@ -1,5 +1,5 @@
 {-
-Copyright 2015 Martin Buck
+Copyright 2016 Martin Buck
 This file is part of H2D.
 H2D is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
@@ -13,21 +13,15 @@ You should have received a copy of the GNU Lesser General Public License
 along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 -}
 
-{-# LANGUAGE FlexibleInstances #-}
+module Base2D where
 
-module Rotateable where
+import Data.List.Split (chunksOf)
+import Control.Parallel.Strategies (runEval, rpar, parMap)
 
-import Types2D
-import Base2D
+--------------------------------------------------------------------------------
 
-class Rotateable a where
-    rotate :: a -> Double -> Vec2D -> a
+pointChunkSize :: Int
+pointChunkSize = 1000
 
-instance Rotateable Path2D where
-    rotate path rad center = chunkParMap pointChunkSize (\x -> rotate x rad center) path
-
-instance Rotateable Vec2D where
-    rotate (Vec2D x y) rad (Vec2D centerX centerY) = Vec2D newX newY
-        where
-            newX = centerX + cos rad * (x - centerX) - sin rad * (y - centerY)
-            newY = centerY + sin rad * (x - centerX) + cos rad * (y - centerY)
+chunkParMap :: Int -> (a -> b) -> [a] -> [b]
+chunkParMap chunkSize f l = concat $ parMap rpar (map f) (chunksOf chunkSize l)

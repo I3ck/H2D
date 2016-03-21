@@ -17,15 +17,16 @@ along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 
 module Path2D where
 
-import Control.Parallel.Strategies (runEval, rpar, parMap)
-
 import Types2D
+import Base2D
 import Vec2D
 import Debug.Trace
 
 import Data.List
-import Data.List.Split (chunksOf)
 import Data.Ord (comparing)
+
+import Control.Parallel.Strategies (runEval, rpar, parMap)
+
 
 debug = flip trace
 
@@ -206,12 +207,8 @@ intersectionsLL    (Line2D p1 p2) (Line2D q1 q2)
 
 --------------------------------------------------------------------------------
 
----TODO define in other lib or very globally
-chunkParMap :: Int -> (a -> b) -> [a] -> [b]
-chunkParMap chunkSize f l = concat $ parMap rpar (map f) (chunksOf chunkSize l)
-
 createInvolutCircle :: Int -> Double -> Double -> Double -> Vec2D -> Path2D
-createInvolutCircle    nPoints diameter radStart  radEnd    (Vec2D centerX centerY) = chunkParMap 10 involut [0..(nPoints-1)]
+createInvolutCircle    nPoints diameter radStart  radEnd    (Vec2D centerX centerY) = chunkParMap pointChunkSize involut [0..(nPoints-1)]
     where
         involut :: Int -> Vec2D
         involut i = (Vec2D x y)
@@ -223,7 +220,7 @@ createInvolutCircle    nPoints diameter radStart  radEnd    (Vec2D centerX cente
 --------------------------------------------------------------------------------
 
 createArc :: Int -> Double -> Double -> Double -> Vec2D -> Path2D
-createArc    nPoints diameter radStart  radEnd    (Vec2D centerX centerY) = map arc [0..(nPoints-1)]
+createArc    nPoints diameter radStart  radEnd    (Vec2D centerX centerY) = chunkParMap pointChunkSize arc [0..(nPoints-1)]
     where
         arc :: Int -> Vec2D
         arc i = (Vec2D x y)
@@ -235,7 +232,7 @@ createArc    nPoints diameter radStart  radEnd    (Vec2D centerX centerY) = map 
 --------------------------------------------------------------------------------
 
 createEllipse :: Int -> Double -> Double -> Double -> Vec2D -> Path2D
-createEllipse    nPoints a        b         rad       (Vec2D centerX centerY) = map ell [0..(nPoints-1)]
+createEllipse    nPoints a        b         rad       (Vec2D centerX centerY) = chunkParMap pointChunkSize ell [0..(nPoints-1)]
     where
         ell :: Int -> Vec2D
         ell i = (Vec2D x y)
@@ -257,7 +254,7 @@ createRectangle    width     height    (Vec2D centerX centerY) = [p1, p2, p3, p4
 --------------------------------------------------------------------------------
 
 createLine :: Vec2D -> Vec2D -> Int -> Path2D
-createLine    (Vec2D x1 y1) (Vec2D x2 y2) nPoints = map lin [0..(nPoints-1)]
+createLine    (Vec2D x1 y1) (Vec2D x2 y2) nPoints = chunkParMap pointChunkSize lin [0..(nPoints-1)]
     where
         deltaX = (x2 - x1) / (fromIntegral nPoints - 1.0)
         deltaY = (y2 - y1) / (fromIntegral nPoints - 1.0)
@@ -270,7 +267,7 @@ createLine    (Vec2D x1 y1) (Vec2D x2 y2) nPoints = map lin [0..(nPoints-1)]
 --------------------------------------------------------------------------------
 
 interpolationBezier :: Path2D -> Int -> Path2D
-interpolationBezier    path      nPoints = map bez [1..(nPoints-1)]
+interpolationBezier    path      nPoints = chunkParMap pointChunkSize bez [1..(nPoints-1)]
     where
         bez :: Int -> Vec2D
         bez i = bezier path (fromIntegral i * 1.0 / fromIntegral nPoints)
@@ -328,7 +325,7 @@ concaveHull    points    minDist   maxIter = buildHull 0 inital --TODO maxIter /
         pCreatingFlatestTriangle    path      hull      pStart   pEnd = path !! index
             where
                 index = fst $ maximumBy (comparing snd) (zip [0..] flats)
-                flats = map flatnessOfNewTriangle path
+                flats = chunkParMap pointChunkSize flatnessOfNewTriangle path
 
                 flatnessOfNewTriangle :: Vec2D -> Double
                 flatnessOfNewTriangle p
@@ -375,7 +372,7 @@ douglasPeucker eps path | length path < 3 = [start, end]
     right         = douglasPeucker eps (drop (index+1) path)
     (index, dMax) | length distances > 0 = maximumBy (compDists) (zip [1..] distances)
                   | otherwise            = (0, 0)
-    distances     = map calcDist (init $ tail path)
+    distances     = chunkParMap pointChunkSize calcDist (init $ tail path)
     calcDist p    = distPointLine p (start, end)
     end           = last path
     start         = head path

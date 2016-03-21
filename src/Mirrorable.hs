@@ -17,6 +17,7 @@ along with H2D.  If not, see <http://www.gnu.org/licenses/>.
 module Mirrorable where
 
 import Types2D
+import Base2D
 
 class Mirrorable a where
     mirrorV :: a -> Double -> a
@@ -29,6 +30,6 @@ instance Mirrorable Vec2D where
     mirrorP (Vec2D x y) (Vec2D a b) = Vec2D (2 * a - x) (2 * b - y)
 
 instance Mirrorable Path2D where
-    mirrorV path a = map (flip mirrorV a) path
-    mirrorH path a = map (flip mirrorH a) path
-    mirrorP path a = map (flip mirrorP a) path
+    mirrorV path a = chunkParMap pointChunkSize (flip mirrorV a) path
+    mirrorH path a = chunkParMap pointChunkSize (flip mirrorH a) path
+    mirrorP path a = chunkParMap pointChunkSize (flip mirrorP a) path
